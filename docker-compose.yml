@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  fixora-api:
+    build: .
+    container_name: fixora-api
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - ./app:/app/app # Hot-reload during development
+      - fixora_repos:/tmp/fixora_repos
+    depends_on:
+      chromadb:
+        condition: service_healthy
+    restart: unless-stopped
+
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: fixora-chromadb
+    ports:
+      - "8001:8000"
+    volumes:
+      - chroma_data:/chroma/chroma
+    environment:
+      - IS_PERSISTENT=TRUE
+      - ANONYMIZED_TELEMETRY=FALSE
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  chroma_data:
+  fixora_repos:
