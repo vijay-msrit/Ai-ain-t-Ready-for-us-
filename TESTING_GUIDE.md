@@ -1,6 +1,6 @@
 # 🧪 Fixora — Testing Guide
 
-Three ways to test the app, from easiest to hardest.
+Three ways to test the app, from easiest to hardest..
 
 ---
 
