@@ -21,33 +21,34 @@ export default function Sidebar() {
 
   return (
     <aside style={{
-      width: "330px", minHeight: "100vh", background: "#0A0A0A",
-      borderRight: "1px solid #1A1A1A", display: "flex", flexDirection: "column",
+      width: "330px", minHeight: "100vh", background: "var(--bg-main)",
+      borderRight: "1px solid var(--bg-card)", display: "flex", flexDirection: "column",
       padding: "32px 20px", flexShrink: 0,
     }}>
       {/* Logo */}
       <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "28px" }}>
         <div style={{
-        width: "42px", height: "42px", background: "#6366F1", borderRadius: "10px",
+        width: "42px", height: "42px", background: "var(--accent-blue)", borderRadius: "10px",
           display: "flex", alignItems: "center", justifyContent: "center",
           fontSize: "15px", fontWeight: "900", color: "#fff", flexShrink: 0,
         }}>FX</div>
         <div>
-          <p style={{ fontSize: "17px", fontWeight: "800", color: "#fff", lineHeight: 1.1 }}>Fixora</p>
-          <p style={{ fontSize: "11px", color: "#555", marginTop: "3px" }}>AI Issue Resolver</p>
+          <p style={{ fontSize: "17px", fontWeight: "800", color: "var(--text-main)", lineHeight: 1.1 }}>Fixora</p>
+          <p style={{ fontSize: "11px", color: "var(--text-muted-dark)", marginTop: "3px" }}>AI Issue Resolver</p>
         </div>
       </div>
 
       <p style={{
-        fontSize: "11px", fontWeight: "700", color: "#FF8C00",
+        fontSize: "11px", fontWeight: "700", color: "var(--accent-yellow)",
         letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "14px",
       }}>Pipeline</p>
 
       {/* Vertical connector */}
       <nav style={{ position: "relative" }}>
         <div style={{
-          position: "absolute", left: "15px", top: "28px", bottom: "28px",
-          width: "1px", background: "#1E1E1E",
+          position: "absolute", left: "26px", top: "28px", bottom: "28px",
+          width: "2px", background: "var(--border-dark)",
+          zIndex: 0,
         }} />
 
         {STEPS.map((step, i) => {
@@ -58,27 +59,29 @@ export default function Sidebar() {
               <div style={{
                 display: "flex", alignItems: "center", gap: "10px",
                 padding: "7px 8px", borderRadius: "8px", position: "relative", zIndex: 1,
-                background: isActive ? "#1A1A1A" : "transparent",
+                background: isActive ? "var(--bg-card)" : "transparent",
                 marginBottom: "2px",
               }}>
                 <div style={{
                   width: "36px", height: "36px", borderRadius: "50%", flexShrink: 0,
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: "13px", fontWeight: "800",
-                  background: isDone ? "#6366F1" : isActive ? "#FF8C00" : "transparent",
-                  border: isDone || isActive ? "none" : "1.5px solid #2A2A2A",
-                  color: isDone || isActive ? "#fff" : "#444",
+                  fontSize: "13px", fontWeight: "600", letterSpacing: "0.05em",
+                  background: isDone ? "var(--accent-blue)" : isActive ? "var(--accent-yellow)" : "var(--bg-main)",
+                  border: isDone || isActive ? "none" : "1.5px solid var(--border-dark)",
+                  color: isDone || isActive ? "#fff" : "var(--text-muted-dark)",
                 }}>
                   {isDone ? <Check /> : step.num}
                 </div>
                 <div>
                   <p style={{
-                    fontSize: "14px", fontWeight: isDone || isActive ? "600" : "400",
-                    color: isDone || isActive ? "#fff" : "#444", lineHeight: 1.2,
+                    fontSize: "16px", fontWeight: isDone || isActive ? "500" : "400",
+                    color: isDone || isActive ? "var(--text-main)" : "var(--text-muted-dark)", lineHeight: 1.2,
+                    letterSpacing: "0.08em",
                   }}>{step.label}</p>
                   <p style={{
-                    fontSize: "11px", fontWeight: "600", marginTop: "2px",
-                    color: isDone ? "#6366F1" : isActive ? "#FF8C00" : "transparent",
+                    fontSize: "12px", fontWeight: "600", marginTop: "2px",
+                    color: isDone ? "var(--accent-blue)" : isActive ? "var(--accent-yellow)" : "transparent",
+                    letterSpacing: "0.15em",
                   }}>{isDone ? "Done" : isActive ? "Active" : "·"}</p>
                 </div>
               </div>

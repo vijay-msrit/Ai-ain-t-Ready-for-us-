@@ -2,15 +2,89 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Teko:wght@400;600;700&display=swap');
+
+:root {
+  --bg-main: #0A0A0A;
+  --bg-card: #1A1A1A;
+  --bg-sidebar: #0F0F0F;
+  --border: #2A2A2A;
+  --border-dark: #1E1E1E;
+  
+  --text-main: #ffffff;
+  --text-muted: #9ca3af;
+  --text-muted-light: #aaaaaa;
+  --text-muted-dark: #555555;
+  
+  --accent-blue: #4F46E5;
+  --accent-blue-rgb: 79, 70, 229;
+  
+  --accent-yellow: #FF8C00;
+  --accent-yellow-rgb: 255, 140, 0;
+
+  --accent-green: #22C55E;
+  --accent-red: #EF4444;
+
+  --shadow-idle: 0 2px 12px rgba(0,0,0,0.2);
+  --shadow-hover: 0 8px 32px rgba(0,0,0,0.4);
+}
+
+.theme-light {
+  --bg-main: #EAECEF; /* Slightly cooler/deeper gray canvas to lift the white cards */
+  --bg-card: #FFFFFF; /* Pure bright white cards */
+  --bg-sidebar: #F4F5F8;
+  --border: #B0B7C3; /* Much stronger, highly defined structural border */
+  --border-dark: #8A94A5;
+
+  --text-main: #111827;
+  --text-muted: #4B5563;
+  --text-muted-light: #6B7280;
+  --text-muted-dark: #374151;
+
+  --accent-blue: #E11D48; /* Pink/Rose in place of Blue */
+  --accent-blue-rgb: 225, 29, 72;
+
+  --accent-yellow: #000000; /* Black in place of Yellow */
+  --accent-yellow-rgb: 0, 0, 0;
+
+  --accent-green: #16A34A;
+  --accent-red: #DC2626;
+  
+  --text-inverted: #ffffff;
+
+  --shadow-idle: 0 2px 8px rgba(0,0,0,0.06);
+  --shadow-hover: 0 8px 24px rgba(0,0,0,0.12);
+}
+
 @layer base {
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   html, body {
-    background-color: #0A0A0A;
-    color: #FFFFFF;
-    font-family: "Inter", system-ui, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    font-family: 'Teko', 'Bebas Neue', Impact, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Fix text clarity for condensed display fonts ── */
+  /* Target elements that were dynamically styled too thick and space them out */
+  * {
+    letter-spacing: 0.05em;
+  }
+  
+  h1, h2, h3, h4, h5, h6, strong, b, 
+  [style*="font-weight: 700"], 
+  [style*="font-weight: 800"], 
+  [style*="font-weight: 900"] {
+    font-weight: 500 !important; /* Cap weight to stop browser 'faux-bold' smudging */
+    letter-spacing: 0.1em !important; /* Let the condensed characters breathe */
+  }
+
+  code, pre {
+    text-transform: none; /* Keep code diffs readable! */
   }
 
   ::-webkit-scrollbar { width: 4px; height: 4px; }
@@ -24,7 +98,7 @@
   transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.12s ease;
 }
 .btn-prev:hover:not(:disabled) {
-  background: #252525 !important;
+  background: var(--border) !important;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
   transform: translateY(-1px);
 }
@@ -34,8 +108,8 @@
   transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.12s ease;
 }
 .btn-next:hover:not(:disabled) {
-  background: #4F46E5 !important;
-  box-shadow: 0 4px 18px rgba(99, 102, 241, 0.45);
+  background: var(--accent-blue) !important;
+  box-shadow: 0 4px 18px rgba(var(--accent-blue-rgb), 0.45);
   transform: translateY(-1px);
 }
 .btn-next:active:not(:disabled) { transform: translateY(0); }
@@ -44,8 +118,8 @@
   transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.12s ease;
 }
 .btn-run:hover:not(:disabled) {
-  background: #9A7200 !important;
-  box-shadow: 0 6px 22px rgba(154, 114, 0, 0.45);
+  background: var(--accent-yellow) !important;
+  box-shadow: 0 6px 22px rgba(var(--accent-yellow-rgb), 0.45);
   transform: translateY(-1px);
 }
 .btn-run:active:not(:disabled) { transform: translateY(0); box-shadow: none; }
@@ -83,12 +157,12 @@ div[style*="cursor: pointer"]:hover {
 }
 
 /* File list rows in Localizer */
-div[style*="border-radius: 8px"][style*="1px solid #252525"] {
+div[style*="border-radius: 8px"][style*="1px solid var(--border)"] {
   transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
 }
-div[style*="border-radius: 8px"][style*="1px solid #252525"]:hover {
-  background: #222222 !important;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+div[style*="border-radius: 8px"][style*="1px solid var(--border)"]:hover {
+  background: var(--border-dark) !important;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
   transform: translateY(-1px);
 }
 
@@ -97,8 +171,8 @@ input, textarea {
   transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
 }
 input:focus, textarea:focus {
-  border-color: #6366F1 !important;
-  box-shadow: 0 0 0 3px rgba(99,102,241,0.15) !important;
+  border-color: var(--accent-blue) !important;
+  box-shadow: 0 0 0 3px rgba(var(--accent-blue-rgb),0.15) !important;
   outline: none !important;
 }
 

@@ -32,8 +32,8 @@ const ZapIcon = () => (
 );
 
 const inputStyle = {
-  width: "100%", padding: "11px 14px", background: "#1A1A1A",
-  border: "1px solid #2A2A2A", borderRadius: "8px", color: "#fff",
+  width: "100%", padding: "11px 14px", background: "var(--bg-card)",
+  border: "1px solid var(--border)", borderRadius: "8px", color: "var(--text-main)",
   fontSize: "14px", fontFamily: "inherit", outline: "none", boxSizing: "border-box",
 };
 
@@ -65,21 +65,21 @@ export default function Indexer() {
 
   return (
     <div style={{ padding: "40px", maxWidth: "680px" }}>
-      <p style={{ fontSize: "11px", fontWeight: "700", color: "#FF8C00", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "12px" }}>
+      <p style={{ fontSize: "11px", fontWeight: "700", color: "var(--accent-yellow)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "12px" }}>
         Step 1 of 5
       </p>
-      <h1 style={{ fontSize: "54px", fontWeight: "900", lineHeight: 1.05, color: "#fff", marginBottom: "4px" }}>Start the</h1>
-      <h1 style={{ fontSize: "54px", fontWeight: "900", lineHeight: 1.05, color: "#FF8C00", marginBottom: "20px" }}>Pipeline.</h1>
-      <p style={{ fontSize: "15px", color: "#777", lineHeight: 1.7, marginBottom: "32px" }}>
+      <h1 style={{ fontSize: "54px", fontWeight: "900", lineHeight: 1.05, color: "var(--text-main)", marginBottom: "4px" }}>Start the</h1>
+      <h1 style={{ fontSize: "54px", fontWeight: "900", lineHeight: 1.05, color: "var(--accent-yellow)", marginBottom: "20px" }}>Pipeline.</h1>
+      <p style={{ fontSize: "15px", color: "var(--text-muted-dark)", lineHeight: 1.7, marginBottom: "32px" }}>
         Provide a GitHub repo and issue details. Fixora will index the code, locate the bug, generate a patch, and open a PR — automatically.
       </p>
 
       <AgentCard title="Indexer Agent" description="Run the full 5-agent pipeline" status={status}
-        iconBg="#6366F1" icon={<ZapIcon />}>
+        iconBg="var(--accent-blue)" icon={<ZapIcon />}>
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           {/* Repo URL */}
           <div>
-            <label style={{ fontSize: "13px", fontWeight: "600", color: "#aaa", display: "block", marginBottom: "8px" }}>
+            <label style={{ fontSize: "13px", fontWeight: "600", color: "var(--text-muted-light)", display: "block", marginBottom: "8px" }}>
               GitHub Repository URL
             </label>
             <div style={{ position: "relative" }}>
@@ -92,15 +92,15 @@ export default function Indexer() {
                 style={{ ...inputStyle, paddingLeft: "38px" }} />
             </div>
             {repoUrl && !isValidUrl && (
-              <p style={{ fontSize: "11px", color: "#EF4444", marginTop: "6px" }}>Must start with https://github.com/</p>
+              <p style={{ fontSize: "11px", color: "var(--accent-red)", marginTop: "6px" }}>Must start with https://github.com/</p>
             )}
           </div>
 
           {/* Issue Number */}
           <div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "8px" }}>
-              <label style={{ fontSize: "13px", fontWeight: "600", color: "#aaa" }}>Issue Number</label>
-              <span style={{ fontSize: "11px", color: "#555" }}>(from GitHub Issues tab)</span>
+              <label style={{ fontSize: "13px", fontWeight: "600", color: "var(--text-muted-light)" }}>Issue Number</label>
+              <span style={{ fontSize: "11px", color: "var(--text-muted-dark)" }}>(from GitHub Issues tab)</span>
             </div>
             <input type="number" min="1" value={issueNumber}
               onChange={e => setIssueNumber(e.target.value)}
@@ -109,16 +109,16 @@ export default function Indexer() {
           </div>
 
           {error && (
-            <div style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: "8px", padding: "12px", color: "#EF4444", fontSize: "13px" }}>
+            <div style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: "8px", padding: "12px", color: "var(--accent-red)", fontSize: "13px" }}>
               {error}
             </div>
           )}
 
           <button onClick={handleRun} disabled={!canSubmit} className="btn-run" style={{
             width: "100%", padding: "14px",
-            background: canSubmit ? "#7A5800" : "#1A1A1A",
+            background: canSubmit ? "#7A5800" : "var(--bg-card)",
             border: "none", borderRadius: "8px",
-            color: canSubmit ? "#fff" : "#444",
+            color: canSubmit ? "var(--text-main)" : "var(--text-muted-dark)",
             fontSize: "15px", fontWeight: "700",
             cursor: canSubmit ? "pointer" : "not-allowed",
             fontFamily: "inherit",
@@ -139,16 +139,16 @@ export default function Indexer() {
       <AnimatePresence>
         {logs.length > 0 && (
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-            style={{ background: "#141414", border: "1px solid #252525", borderRadius: "12px", padding: "16px" }}>
+            style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "12px", padding: "16px" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
-              <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: status === "running" ? "#FF8C00" : "#22C55E" }} />
-              <span style={{ fontSize: "13px", fontWeight: "600", color: "#fff" }}>Pipeline Logs</span>
-              {status === "running" && <span style={{ fontSize: "11px", color: "#555", marginLeft: "auto" }}>takes 1–3 min</span>}
+              <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: status === "running" ? "var(--accent-yellow)" : "var(--accent-green)" }} />
+              <span style={{ fontSize: "13px", fontWeight: "600", color: "var(--text-main)" }}>Pipeline Logs</span>
+              {status === "running" && <span style={{ fontSize: "11px", color: "var(--text-muted-dark)", marginLeft: "auto" }}>takes 1–3 min</span>}
             </div>
             <div style={{ fontFamily: "monospace", fontSize: "12px", maxHeight: "180px", overflowY: "auto" }}>
               {logs.map((log, i) => (
-                <div key={i} style={{ display: "flex", gap: "8px", padding: "2px 0", color: log.startsWith("✗") ? "#EF4444" : "#aaa" }}>
-                  <span style={{ color: "#FF8C00" }}>›</span>{log}
+                <div key={i} style={{ display: "flex", gap: "8px", padding: "2px 0", color: log.startsWith("✗") ? "var(--accent-red)" : "var(--text-muted-light)" }}>
+                  <span style={{ color: "var(--accent-yellow)" }}>›</span>{log}
                 </div>
               ))}
             </div>

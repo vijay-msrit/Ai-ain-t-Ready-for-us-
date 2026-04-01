@@ -18,7 +18,7 @@ const TargetIcon = () => (
 );
 
 const FileIcon = () => (
-  <svg width="14" height="14" fill="none" stroke="#777" strokeWidth="2"
+  <svg width="14" height="14" fill="none" stroke="var(--text-muted-dark)" strokeWidth="2"
     strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
     <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" /><polyline points="14 2 14 8 20 8" />
   </svg>
@@ -26,21 +26,21 @@ const FileIcon = () => (
 
 const SnippetItem = ({ s }) => {
   const pct = s.score !== undefined ? Math.round(s.score * 100) : null;
-  const scoreColor = pct >= 80 ? "#22C55E" : pct >= 60 ? "#FF8C00" : "#EF4444";
+  const scoreColor = pct >= 80 ? "var(--accent-green)" : pct >= 60 ? "var(--accent-yellow)" : "var(--accent-red)";
   const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <div style={{ background: "#141414", border: "1px solid #252525", borderRadius: "10px", overflow: "hidden" }}>
-      <div onClick={() => setCollapsed(c => !c)} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 14px", cursor: "pointer", background: "#1A1A1A" }}>
+    <div style={{ background: "#050505", border: "1px solid #2A2A2A", borderRadius: "10px", overflow: "hidden" }}>
+      <div onClick={() => setCollapsed(c => !c)} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 14px", cursor: "pointer", background: "#111111", borderBottom: collapsed ? "none" : "1px solid #2A2A2A" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "8px", minWidth: 0 }}>
           <FileIcon />
-          <span title={s.file_path} style={{ fontFamily: "monospace", fontSize: "12px", color: "#ddd", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{formatPath(s.file_path)}</span>
-          <span style={{ fontSize: "11px", color: "#555", flexShrink: 0 }}>L{s.start_line}–{s.end_line}</span>
+          <span title={s.file_path} style={{ fontFamily: "monospace", fontSize: "12px", color: "#9CA3AF", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{formatPath(s.file_path)}</span>
+          <span style={{ fontSize: "11px", color: "#6B7280", flexShrink: 0 }}>L{s.start_line}–{s.end_line}</span>
         </div>
         {pct !== null && <span style={{ fontSize: "12px", fontWeight: "700", fontFamily: "monospace", color: scoreColor, marginLeft: "8px", flexShrink: 0 }}>{pct}%</span>}
       </div>
       {!collapsed && (
-        <pre style={{ fontFamily: "monospace", fontSize: "12px", color: "#aaa", padding: "12px 14px", overflowX: "auto", overflowY: "auto", maxHeight: "350px", lineHeight: 1.5, whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+        <pre style={{ fontFamily: "monospace", fontSize: "12px", color: "#E5E7EB", padding: "12px 14px", overflowX: "auto", overflowY: "auto", maxHeight: "350px", lineHeight: 1.5, whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
           {s.snippet.replace(/\\n/g, '\n').replace(/\\t/g, '  ')}
         </pre>
       )}
@@ -63,12 +63,12 @@ export default function Localizer() {
 
   return (
     <div style={{ padding: "40px", maxWidth: "700px" }}>
-      <p style={{ fontSize: "11px", fontWeight: "700", color: "#FF8C00", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "12px" }}>
+      <p style={{ fontSize: "11px", fontWeight: "700", color: "var(--accent-yellow)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "12px" }}>
         Step 3 of 5
       </p>
-      <h1 style={{ fontSize: "54px", fontWeight: "900", lineHeight: 1.05, color: "#fff", marginBottom: "4px" }}>Find the</h1>
-      <h1 style={{ fontSize: "54px", fontWeight: "900", lineHeight: 1.05, color: "#FF8C00", marginBottom: "20px" }}>Bug.</h1>
-      <p style={{ fontSize: "15px", color: "#777", lineHeight: 1.7, marginBottom: "32px" }}>
+      <h1 style={{ fontSize: "54px", fontWeight: "900", lineHeight: 1.05, color: "var(--text-main)", marginBottom: "4px" }}>Find the</h1>
+      <h1 style={{ fontSize: "54px", fontWeight: "900", lineHeight: 1.05, color: "var(--accent-yellow)", marginBottom: "20px" }}>Bug.</h1>
+      <p style={{ fontSize: "15px", color: "var(--text-muted-dark)", lineHeight: 1.7, marginBottom: "32px" }}>
         Semantic vector search through your codebase pinpoints the most relevant files and snippets.
       </p>
 
@@ -76,17 +76,17 @@ export default function Localizer() {
         status={status} iconBg="#EC4899" icon={<TargetIcon />}>
 
         {status === "running" && (
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", color: "#777", padding: "16px 0" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", color: "var(--text-muted-dark)", padding: "16px 0" }}>
             <svg style={{ animation: "spin 1s linear infinite" }} width="16" height="16" fill="none" viewBox="0 0 24 24">
-              <circle cx="12" cy="12" r="10" stroke="#FF8C00" strokeWidth="4" opacity="0.25" />
-              <path fill="#FF8C00" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+              <circle cx="12" cy="12" r="10" stroke="var(--accent-yellow)" strokeWidth="4" opacity="0.25" />
+              <path fill="var(--accent-yellow)" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
             </svg>
             Querying ChromaDB vector index...
           </div>
         )}
 
         {error && (
-          <div style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: "8px", padding: "12px", color: "#EF4444", fontSize: "13px" }}>
+          <div style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: "8px", padding: "12px", color: "var(--accent-red)", fontSize: "13px" }}>
             {error}
           </div>
         )}
@@ -96,12 +96,12 @@ export default function Localizer() {
             {data.probable_bug_files.map((file, i) => (
               <motion.div key={file} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.06 }}
-                style={{ display: "flex", alignItems: "center", gap: "10px", background: "#1A1A1A", border: "1px solid #252525", borderRadius: "8px", padding: "10px 14px", minWidth: 0 }}>
-                <span style={{ width: "22px", height: "22px", borderRadius: "50%", background: "rgba(255,140,0,0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: "11px", fontWeight: "800", color: "#FF8C00" }}>
+                style={{ display: "flex", alignItems: "center", gap: "10px", background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "8px", padding: "10px 14px", minWidth: 0 }}>
+                <span style={{ width: "22px", height: "22px", borderRadius: "50%", background: "rgba(var(--accent-yellow-rgb), 0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: "11px", fontWeight: "800", color: "var(--accent-yellow)" }}>
                   {i + 1}
                 </span>
                 <FileIcon />
-                <span title={file} style={{ fontFamily: "monospace", fontSize: "13px", color: "#ddd", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", flex: 1 }}>{formatPath(file)}</span>
+                <span title={file} style={{ fontFamily: "monospace", fontSize: "13px", color: "var(--text-muted-light)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", flex: 1 }}>{formatPath(file)}</span>
               </motion.div>
             ))}
           </motion.div>
@@ -115,8 +115,8 @@ export default function Localizer() {
         return (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
             <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px" }}>
-              <h3 style={{ fontSize: "16px", fontWeight: "700", color: "#fff" }}>Relevant Snippets</h3>
-              <span style={{ fontSize: "11px", fontWeight: "700", padding: "3px 8px", borderRadius: "6px", background: "rgba(255,140,0,0.12)", color: "#FF8C00", border: "1px solid rgba(255,140,0,0.3)" }}>
+              <h3 style={{ fontSize: "16px", fontWeight: "700", color: "var(--text-main)" }}>Relevant Snippets</h3>
+              <span style={{ fontSize: "11px", fontWeight: "700", padding: "3px 8px", borderRadius: "6px", background: "rgba(var(--accent-yellow-rgb), 0.12)", color: "var(--accent-yellow)", border: "1px solid rgba(var(--accent-yellow-rgb), 0.3)" }}>
                 {uniqueSnippets.length} found
               </span>
             </div>
