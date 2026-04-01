@@ -1,6 +1,6 @@
 """
 Integration test — runs the full Fixora pipeline on a minimal mock repo.
-Uses pytest-mock to stub LLM calls and GitHub API.
+Uses pytest-mock to stub LLM calls and GitHub API..
 """
 import json
 import os

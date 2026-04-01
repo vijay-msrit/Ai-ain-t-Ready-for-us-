@@ -16,9 +16,9 @@ OpenAI's `gpt-4o` is **paid**. Use **Google Gemini** as a free alternative.
 
 ### Update `.env`:
 ```env
-OPENAI_API_KEY=AIza...   # Your Gemini key goes here
+OPENAI_API_KEY=AIza...   # Your Gemini key goes here.
 LLM_PROVIDER=openai      # Will need code change (see note below)
-LLM_MODEL=gemini-1.5-flash
+LLM_MODEL=gemini-1.5-flash..
 EMBEDDING_MODEL=models/embedding-001
 ```
 

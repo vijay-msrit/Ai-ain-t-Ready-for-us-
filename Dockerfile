@@ -2,7 +2,7 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install system dependencies for git and patch
+# Install system dependencies for git and patch..
 RUN apt-get update && apt-get install -y \
     git \
     patch \

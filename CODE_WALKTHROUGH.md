@@ -1,6 +1,6 @@
 # 🧠 Fixora — Complete Code Walkthrough (Interview Guide)
 
-A file-by-file explanation of every module in the project, with code snippets and interview Q&A.
+A file-by-file explanation of every module in the project, with code snippets and interview Q&A...
 
 ---
 

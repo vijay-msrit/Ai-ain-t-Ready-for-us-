@@ -1,6 +1,6 @@
 # 🔄 Fixora — Core Workflow Explained
 
-Step-by-step breakdown of the 5 core files and how they connect.
+Step-by-step breakdown of the 5 core files and how they connect...
 
 ---
 
