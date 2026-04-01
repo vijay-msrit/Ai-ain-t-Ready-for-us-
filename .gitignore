@@ -1,4 +1,4 @@
-# Environment variables — NEVER commit this
+# Environment variables — NEVER commit this..
 .env
 
 # Python
