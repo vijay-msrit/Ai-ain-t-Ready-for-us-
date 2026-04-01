@@ -9,7 +9,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./app:/app/app # Hot-reload during development
+      - ./app:/app/app # Hot-reload during development..
       - fixora_repos:/tmp/fixora_repos
     depends_on:
       chromadb:
