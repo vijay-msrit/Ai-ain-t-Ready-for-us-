@@ -41,3 +41,5 @@ fixora_repos/
 # OS Files
 .DS_Store
 Thumbs.db
+
+PROJECT_CONTEXT.txt

@@ -1,0 +1,254 @@
+﻿python : DEBUG:asyncio:Using proactor: 
+IocpProactor
+At line:1 char:43
++ ... lama-3.3-70b-versatile"; python 
+test_eval.py > test_eval_out.txt 2>&1
++                              
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (D 
+   EBUG:asyncio:U...r: IocpProactor:String) [  
+  ], RemoteException
+    + FullyQualifiedErrorId : NativeCommandErr 
+   or
+ 
+INFO:fixora.agents.evaluator:[Evaluator] 
+Requesting grounded patch evaluation from 
+LLM...
+INFO:fixora.tools.llm_client:[llm_client] 
+Provider: GROQ | Model: 
+llama-3.3-70b-versatile | Base URL: 
+https://api.groq.com/openai/v1
+DEBUG:openai._base_client:Request options: 
+{'method': 'post', 'url': '/chat/completions', 
+'headers': {'X-Stainless-Raw-Response': 
+'true'}, 'files': None, 'idempotency_key': 'sta
+inless-python-retry-2fb7816a-d138-4758-86a8-58a
+4d950212f', 'content': None, 'json_data': 
+{'messages': [{'content': 'You are a senior 
+code reviewer embedded inside an automated 
+bug-fixing pipeline.\nYou will be given:\n  1. 
+A GitHub issue report (the bug being fixed)\n  
+2. The ACTUAL source code snippets that were 
+identified as the bug location\n  3. The 
+ACTUAL unified diff (patch) that was generated 
+to fix the bug\n\nYour job is to deeply 
+analyze whether the patch ACTUALLY fixes the 
+described bug\nby reading the real code and 
+the real diff line-by-line.\n\n<rules>\n- You 
+MUST return ONLY a valid JSON object. No 
+markdown fences. No extra text.\n- Every score 
+MUST be based on the actual code and diff you 
+see ù NOT made up.\n- The test_cases MUST 
+reference real function names, real file 
+paths, and real\n  variable names from the 
+code snippets provided. Do NOT invent fake 
+names.\n- If the patch is empty or clearly 
+wrong, give low scores 
+honestly.\n</rules>\n\n<output_schema>\n{\n  
+"scores": {\n    "addresses_root_cause": 
+<float 0.0 to 0.4>,\n    
+"minimal_safe_change": <float 0.0 to 0.3>,\n   
+ "diff_well_formed": <float 0.0 to 0.2>,\n    
+"correct_file_targeted": <float 0.0 to 0.1>\n  
+},\n  "total_confidence": <float 0.0 to 1.0, 
+must equal sum of above 4 scores>,\n  
+"reasoning": "<2-3 sentences explaining what 
+the patch does and whether it fixes the bug, 
+referencing specific code>",\n  "verdict": 
+"\'approved\' | \'needs_review\' | 
+\'rejected\'",\n  "test_cases": [\n    {\n     
+ "name": "<descriptive test function name like 
+test_empty_path_returns_404>",\n      "file": 
+"<the actual file being tested, from the 
+snippets>",\n      "description": "<what this 
+test verifies, referencing the actual bug>",\n 
+     "code": "<a real pytest function body 
+that could validate the fix>"\n    }\n  ],\n  
+"pr_title": "<conventional commit title 
+referencing the actual fix, max 72 
+chars>"\n}\n</output_schema>', 'role': 
+'system'}, {'content': '<github_issue>\nTitle: 
+Mock Issue Title\nNumber: #7309\nType: bug | 
+Severity: low\n\nDescription:\nMock body\n\nAI 
+Summary: mock summary\n</github_issue>\n\n<actu
+al_source_code>\nBelow are the REAL code 
+snippets from the repository that were 
+identified as the bug location.\nYou must 
+reference these when writing test 
+cases.\n\n--- File: test.py (lines 1-2) 
+---\ndef mock(): pass\n</actual_source_code>\n\
+n<generated_patch>\nBelow is the REAL unified 
+diff that was generated to fix the 
+bug.\nAnalyze each changed line 
+carefully.\n\n--- a/test.py\n+++ b/test.py\n@@ 
+-1,2 +1,3 @@\n def mock():\n+    return True\n 
+    pass\n</generated_patch>\n\nEvaluate the 
+patch. Score each rubric dimension 
+independently based on the actual code 
+above.\nGenerate test cases that reference 
+real functions and file paths from the source 
+code.\nReturn ONLY the JSON object.', 'role': 
+'user'}], 'model': 'llama-3.3-70b-versatile', 
+'stream': False, 'temperature': 0.0}}
+DEBUG:openai._base_client:Sending HTTP 
+Request: POST 
+https://api.groq.com/openai/v1/chat/completions
+DEBUG:httpcore.connection:connect_tcp.started 
+host='api.groq.com' port=443 
+local_address=None timeout=None 
+socket_options=None
+DEBUG:httpcore.connection:connect_tcp.complete 
+return_value=<httpcore._backends.anyio.AnyIOStr
+eam object at 0x0000013DCDF482F0>
+DEBUG:httpcore.connection:start_tls.started 
+ssl_context=<ssl.SSLContext object at 
+0x0000013DCD97E0D0> 
+server_hostname='api.groq.com' timeout=None
+DEBUG:httpcore.connection:start_tls.complete re
+turn_value=<httpcore._backends.anyio.AnyIOStrea
+m object at 0x0000013DCDEE5810>
+DEBUG:httpcore.http11:send_request_headers.star
+ted request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_headers.comp
+lete
+DEBUG:httpcore.http11:send_request_body.started
+ request=<Request [b'POST']>
+DEBUG:httpcore.http11:send_request_body.complet
+e
+DEBUG:httpcore.http11:receive_response_headers.
+started request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_headers.
+complete return_value=(b'HTTP/1.1', 200, 
+b'OK', [(b'Date', b'Wed, 01 Apr 2026 17:33:52 
+GMT'), (b'Content-Type', b'application/json'), 
+(b'Transfer-Encoding', b'chunked'), 
+(b'Connection', b'keep-alive'), 
+(b'Cache-Control', b'private, max-age=0, 
+no-store, no-cache, must-revalidate'), 
+(b'Server', b'cloudflare'), (b'vary', 
+b'Origin'), (b'x-groq-region', b'bom'), 
+(b'x-ratelimit-limit-requests', b'1000'), 
+(b'x-ratelimit-limit-tokens', b'12000'), 
+(b'x-ratelimit-remaining-requests', b'965'), 
+(b'x-ratelimit-remaining-tokens', b'11105'), 
+(b'x-ratelimit-reset-requests', b'50m24s'), 
+(b'x-ratelimit-reset-tokens', b'4.475s'), 
+(b'x-request-id', 
+b'req_01kn51qnd2e50ajj2cbn0f2avp'), 
+(b'set-cookie', b'__cf_bm=RwgFZY1TxEr8BlN2X6693
+xVZQI_QnUOPLwe6FIpGc0I-1775064831.369986-1.0.1.
+1-TIaMFX3zWzO3p79z_bW8cF8rHxol7cZ0XWjFHWpzyhJDd
+_K8SqCMl..Xe4DNKUY0YWC8awMRZM7fDmjiFvS.2iROY0Yc
+SwpInHvIVoisMZKl2YdotkvWDFN4dmbOMkre; 
+HttpOnly; Secure; Path=/; Domain=groq.com; 
+Expires=Wed, 01 Apr 2026 18:03:52 GMT'), 
+(b'via', b'1.1 google'), 
+(b'Strict-Transport-Security', 
+b'max-age=15552000'), (b'cf-cache-status', 
+b'DYNAMIC'), (b'Content-Encoding', b'gzip'), 
+(b'CF-RAY', b'9e59575c09512f6d-MAA'), 
+(b'alt-svc', b'h3=":443"; ma=86400')])
+INFO:httpx:HTTP Request: POST https://api.groq.
+com/openai/v1/chat/completions "HTTP/1.1 200 
+OK"
+DEBUG:httpcore.http11:receive_response_body.sta
+rted request=<Request [b'POST']>
+DEBUG:httpcore.http11:receive_response_body.com
+plete
+DEBUG:httpcore.http11:response_closed.started
+DEBUG:httpcore.http11:response_closed.complete
+DEBUG:openai._base_client:HTTP Response: POST h
+ttps://api.groq.com/openai/v1/chat/completions 
+"200 OK" Headers({'date': 'Wed, 01 Apr 2026 
+17:33:52 GMT', 'content-type': 
+'application/json', 'transfer-encoding': 
+'chunked', 'connection': 'keep-alive', 
+'cache-control': 'private, max-age=0, 
+no-store, no-cache, must-revalidate', 
+'server': 'cloudflare', 'vary': 'Origin', 
+'x-groq-region': 'bom', 
+'x-ratelimit-limit-requests': '1000', 
+'x-ratelimit-limit-tokens': '12000', 
+'x-ratelimit-remaining-requests': '965', 
+'x-ratelimit-remaining-tokens': '11105', 
+'x-ratelimit-reset-requests': '50m24s', 
+'x-ratelimit-reset-tokens': '4.475s', 
+'x-request-id': 
+'req_01kn51qnd2e50ajj2cbn0f2avp', 
+'set-cookie': '__cf_bm=RwgFZY1TxEr8BlN2X6693xVZ
+QI_QnUOPLwe6FIpGc0I-1775064831.369986-1.0.1.1-T
+IaMFX3zWzO3p79z_bW8cF8rHxol7cZ0XWjFHWpzyhJDd_K8
+SqCMl..Xe4DNKUY0YWC8awMRZM7fDmjiFvS.2iROY0YcSwp
+InHvIVoisMZKl2YdotkvWDFN4dmbOMkre; HttpOnly; 
+Secure; Path=/; Domain=groq.com; Expires=Wed, 
+01 Apr 2026 18:03:52 GMT', 'via': '1.1 
+google', 'strict-transport-security': 
+'max-age=15552000', 'cf-cache-status': 
+'DYNAMIC', 'content-encoding': 'gzip', 
+'cf-ray': '9e59575c09512f6d-MAA', 'alt-svc': 
+'h3=":443"; ma=86400'})
+DEBUG:openai._base_client:request_id: 
+req_01kn51qnd2e50ajj2cbn0f2avp
+INFO:fixora.agents.evaluator:[Evaluator] Raw 
+LLM response:
+{
+  "scores": {
+    "addresses_root_cause": 0.2,
+    "minimal_safe_change": 0.2,
+    "diff_well_formed": 0.2,
+    "correct_file_targeted": 0.1
+  },
+  "total_confidence": 0.7,
+  "reasoning": "The patch adds a return 
+statement to the mock function in test.py, 
+which may fix the bug if the issue was related 
+to the function not returning a value. 
+However, without more context, it's difficult 
+to determine if this is the root cause of the 
+issue. The patch is well-formed and targets 
+the correct file.",
+  "verdict": "needs_review",
+  "test_cases": [
+    {
+      "name": "test_mock_returns_true",
+      "file": "test.py",
+      "description": "Verifies that the mock 
+function returns True",
+      "code": "def test_mock_returns_true(): 
+assert mock() == True"
+    }
+  ],
+  "pr_title": "Fix mock function to return 
+True"
+}
+INFO:fixora.agents.evaluator:[Evaluator] 
+Confidence: 0.7 | Verdict: needs_review
+INFO:fixora.agents.evaluator:[Evaluator] 
+Parsed scores: {'addresses_root_cause': 0.2, 
+'minimal_safe_change': 0.2, 
+'diff_well_formed': 0.2, 
+'correct_file_targeted': 0.1}
+INFO:fixora.agents.evaluator:[Evaluator] 
+Confidence: 0.7, Verdict: needs_review
+DEBUG:urllib3.connectionpool:Starting new 
+HTTPS connection (1): api.github.com:443
+DEBUG:urllib3.connectionpool:https://api.github
+.com:443 "GET /repos/psf/requests HTTP/1.1" 
+200 None
+DEBUG:urllib3.connectionpool:https://api.github
+.com:443 "GET 
+/repos/psf/requests/branches/main HTTP/1.1" 
+200 None
+DEBUG:urllib3.connectionpool:https://api.github
+.com:443 "GET /repos/psf/requests/git/ref/heads
+/fixora/issue-7309 HTTP/1.1" 404 None
+DEBUG:urllib3.connectionpool:https://api.github
+.com:443 "POST /repos/psf/requests/git/refs 
+HTTP/1.1" 404 None
+WARNING:fixora.agents.evaluator:[Evaluator] PR 
+creation failed: 404 {"message": "Not Found", 
+"documentation_url": "https://docs.github.com/r
+est/git/refs#create-a-reference", "status": 
+"404"}
+EVAL RESULT:
+None

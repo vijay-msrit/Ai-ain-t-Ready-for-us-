@@ -120,20 +120,30 @@ async def get_patch():
 # ── GET /api/evaluate ─────────────────────────────────────────────────────────
 @router.get("/evaluate")
 async def get_evaluate():
-    """Return confidence scores, test results, and PR info."""
+    """Return LLM-grounded evaluation: real sub-scores, test cases, and PR info."""
     _require_state()
     confidence = _state.get("confidence_score", 0.0)
     issue_num  = _state.get("issue_number", "auto")
+    classified = _state.get("classified_issue", {})
+
     return {
-        "fix_confidence_score": confidence,
-        "test_pass_rate": 1.0 if _state.get("test_passed") else 0.0,
-        "code_quality_score": confidence,
+        # Real LLM-produced scores (each independently evaluated)
+        "confidence_score": confidence,
+        "score_breakdown": _state.get("score_breakdown", {}),
+        "score_reasoning": _state.get("score_reasoning", ""),
+        "verdict": _state.get("verdict", "needs_review"),
+        # Issue context
+        "issue_title": _state.get("issue_title", ""),
+        "issue_number": issue_num,
+        "issue_type": classified.get("type", "bug"),
+        "issue_severity": classified.get("severity", "medium"),
+        "repo_url": _state.get("repo_url", ""),
+        # Real test cases (generated from actual code snippets)
+        "test_cases": _state.get("test_cases", []),
+        # PR metadata
         "pr_link": _state.get("pr_url", ""),
+        "pr_title": _state.get("pr_title", ""),
         "branch_name": f"fixora/issue-{issue_num}",
-        "commit_message": (
-            f"fix: {_state.get('issue_title', 'Automated fix')} "
-            f"(closes #{issue_num})"
-        ),
     }
 
 
