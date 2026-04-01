@@ -62,7 +62,6 @@ def groq_chat(prompt: str, stream: bool = False) -> str:
 # LangChain client (used by LangGraph agents for OpenAI / DeepSeek / Groq)
 # ---------------------------------------------------------------------------
 
-@lru_cache(maxsize=1)
 def get_llm_client(temperature: float = 0.1) -> ChatOpenAI:
     """
     Return a cached LangChain ChatOpenAI-compatible client.

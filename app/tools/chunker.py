@@ -6,8 +6,7 @@ Updated: 2026-04-01
 import logging
 from pathlib import Path
 
-from llama_index.core import SimpleDirectoryReader, Document
-from llama_index.core.node_parser import CodeSplitter
+from llama_index.core import Document
 
 logger = logging.getLogger("fixora.tools.chunker")
 
@@ -56,23 +55,22 @@ def chunk_repository(repo_path: str) -> list[dict]:
             if not content.strip():
                 continue
 
-            # Use LlamaIndex CodeSplitter
-            splitter = CodeSplitter(
-                language=language,
-                chunk_lines=CHUNK_LINES,
-                chunk_lines_overlap=CHUNK_LINES_OVERLAP,
-                max_chars=MAX_CHARS,
-            )
-
-            raw_doc = Document(text=content, metadata={"file_path": file_path})
-            nodes = splitter.get_nodes_from_documents([raw_doc])
-
-            for i, node in enumerate(nodes):
+            lines = content.splitlines()
+            
+            for i in range(0, len(lines), CHUNK_LINES - CHUNK_LINES_OVERLAP):
+                chunk_lines = lines[i:i + CHUNK_LINES]
+                if not chunk_lines:
+                    break
+                
+                snippet = "\\n".join(chunk_lines)
+                if len(snippet) > MAX_CHARS:
+                    snippet = snippet[:MAX_CHARS]
+                
                 documents.append({
                     "file_path": file_path,
-                    "start_line": i * (CHUNK_LINES - CHUNK_LINES_OVERLAP),
-                    "end_line": i * (CHUNK_LINES - CHUNK_LINES_OVERLAP) + CHUNK_LINES,
-                    "snippet": node.get_content(),
+                    "start_line": i + 1,
+                    "end_line": min(i + CHUNK_LINES, len(lines)),
+                    "snippet": snippet,
                     "language": language,
                 })
 

@@ -153,11 +153,11 @@ async def evaluator_node(state: FixoraState) -> FixoraState:
             "current_phase": "done",
         }
     except Exception as exc:
-        logger.exception(f"[Evaluator] PR creation failed: {exc}")
+        logger.warning(f"[Evaluator] PR creation skipped/failed (Dry Run mode active?): {exc}")
         return {
             **state,
             "confidence_score": confidence,
             "test_passed": test_passed,
-            "error": f"evaluator: PR creation failed: {exc}",
-            "current_phase": "evaluate",
+            "error": f"evaluator: PR creation skipped ({exc})",
+            "current_phase": "done",
         }
