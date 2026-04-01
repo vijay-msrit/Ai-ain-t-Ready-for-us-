@@ -262,3 +262,181 @@ def add_issue_comment(repo_url: str, issue_number: int, comment: str) -> None:
     issue = repo.get_issue(issue_number)
     issue.create_comment(comment)
     logger.info(f"[github_client] Comment posted on issue #{issue_number}")
+
+
+def get_historical_context(repo_url: str, issue_number: int) -> str | None:
+    """
+    Time Machine: find the commit that closed *issue_number*, return its
+    **parent SHA** — i.e. the repo state *before* the fix was applied.
+
+    Strategy
+    --------
+    1. Fetch the issue; bail early if it is still open.
+    2. Walk the issue's timeline events looking for an event whose type
+       indicates the issue was closed by a commit / PR merge:
+         - "closed"  event  → event.commit_id  (direct commit close)
+         - "merged"  event  (rare on issues but possible via REST)
+       If those miss, fall back to scanning linked pull_requests via the
+       issue's cross-reference events ("cross-referenced") for a merged PR.
+    3. Once we have the *closing commit SHA*, resolve its first parent.
+       - For direct-commit closes: use repo.get_commit(sha).parents[0].sha
+       - For PR merges: the merge commit lives on the base repo regardless
+         of whether the PR came from a fork, so we always look it up on the
+         base repo.  If the commit cannot be found there (unusual edge case),
+         we try the fork.
+
+    Returns
+    -------
+    str | None  — parent SHA string, or None if the issue is open / no
+                  closing commit could be resolved.
+
+    Raises
+    ------
+    GithubException  — re-raised for auth / permission errors so the caller
+                       can surface them.  404 / commit-not-found errors are
+                       swallowed and return None.
+    """
+    try:
+        repo = _get_github_repo(repo_url)
+        issue = repo.get_issue(issue_number)
+    except GithubException as exc:
+        logger.error(f"[github_client] get_historical_context: cannot fetch issue — {exc}")
+        raise
+
+    # ── 1. Issue must be closed ───────────────────────────────────────────────
+    if issue.state != "closed":
+        logger.info(
+            f"[github_client] Issue #{issue_number} is still open — "
+            "defaulting to latest main."
+        )
+        return None
+
+    closing_sha: str | None = None
+    fork_full_name: str | None = None  # set if the merge came from a fork
+
+    # ── 2. Walk timeline events ───────────────────────────────────────────────
+    try:
+        for event in issue.get_timeline():
+            event_type = getattr(event, "event", None)
+
+            # Direct commit close  ─────────────────────────────────────────────
+            if event_type == "closed":
+                commit_id = getattr(event, "commit_id", None)
+                if commit_id:
+                    closing_sha = commit_id
+                    logger.info(
+                        f"[github_client] Issue #{issue_number} closed by commit {commit_id[:8]}"
+                    )
+                    break
+
+            # Closed via a PR (cross-referenced) ──────────────────────────────
+            if event_type == "cross-referenced":
+                source = getattr(event, "source", None)
+                if source is None:
+                    continue
+                source_issue = getattr(source, "issue", None)
+                if source_issue is None:
+                    continue
+                # Check it is a PR (pull_request attribute exists) and is merged
+                pr_ref = getattr(source_issue, "pull_request", None)
+                if pr_ref is None:
+                    continue
+                try:
+                    pr = repo.get_pull(source_issue.number)
+                except GithubException:
+                    continue
+                if not pr.merged:
+                    continue
+                closing_sha = pr.merge_commit_sha
+                # Detect cross-repo (fork) PR
+                if pr.head.repo and pr.head.repo.full_name != repo.full_name:
+                    fork_full_name = pr.head.repo.full_name
+                    logger.info(
+                        f"[github_client] Merge came from fork '{fork_full_name}' "
+                        f"— merge commit {closing_sha[:8]} lives on base repo."
+                    )
+                else:
+                    logger.info(
+                        f"[github_client] Issue #{issue_number} closed by PR #{pr.number} "
+                        f"merge commit {closing_sha[:8]}"
+                    )
+                break
+    except Exception as exc:
+        logger.warning(f"[github_client] Timeline walk failed: {exc}")
+
+    # ── 2b. Fallback: scan linked PRs via search ──────────────────────────────
+    if not closing_sha:
+        logger.info(
+            f"[github_client] Timeline gave no closing commit for #{issue_number}; "
+            "trying PR search fallback."
+        )
+        try:
+            g = _get_github_repo.__wrapped__ if hasattr(_get_github_repo, "__wrapped__") else None
+            from github import Github  # noqa: F401
+            g = Github(settings.github_token)
+            query = (
+                f"repo:{repo.full_name} is:pr is:merged "
+                f"in:body #{issue_number}"
+            )
+            results = g.search_issues(query=query)
+            for item in results:
+                pr = repo.get_pull(item.number)
+                if pr.merged and pr.merge_commit_sha:
+                    closing_sha = pr.merge_commit_sha
+                    if pr.head.repo and pr.head.repo.full_name != repo.full_name:
+                        fork_full_name = pr.head.repo.full_name
+                    logger.info(
+                        f"[github_client] Fallback found merge commit {closing_sha[:8]} "
+                        f"via PR #{pr.number}"
+                    )
+                    break
+        except Exception as exc:
+            logger.warning(f"[github_client] PR search fallback failed: {exc}")
+
+    if not closing_sha:
+        logger.warning(
+            f"[github_client] Could not resolve a closing commit for issue #{issue_number}."
+        )
+        return None
+
+    # ── 3. Resolve parent commit SHA ─────────────────────────────────────────
+    # Merge commits (and direct closes) always end up in the BASE repo's
+    # history, even when a fork was involved.  Try base first, fork second.
+    repos_to_try = [repo]
+    if fork_full_name:
+        try:
+            from github import Github as _GH
+            fork_repo = _GH(settings.github_token).get_repo(fork_full_name)
+            repos_to_try.append(fork_repo)
+        except GithubException:
+            pass
+
+    for target_repo in repos_to_try:
+        try:
+            commit = target_repo.get_commit(closing_sha)
+            if not commit.parents:
+                logger.warning(
+                    f"[github_client] Commit {closing_sha[:8]} has no parents "
+                    "(initial commit?). Returning None."
+                )
+                return None
+            parent_sha = commit.parents[0].sha
+            logger.info(
+                f"[github_client] Time Machine SHA: {parent_sha[:8]} "
+                f"(parent of closing commit {closing_sha[:8]})"
+            )
+            return parent_sha
+        except GithubException as exc:
+            if exc.status == 404:
+                logger.debug(
+                    f"[github_client] Commit {closing_sha[:8]} not found in "
+                    f"{target_repo.full_name} — trying next."
+                )
+                continue
+            raise  # re-raise auth/rate-limit errors
+
+    logger.warning(
+        f"[github_client] Parent commit for {closing_sha[:8]} not found in any repo."
+    )
+    return None
+

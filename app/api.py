@@ -7,7 +7,7 @@ GET  /api/localize  — return relevant snippets + probable bug files
 GET  /api/patch     — return generated diff
 GET  /api/evaluate  — return confidence scores + PR info
 NOTE: All state is held in-memory (_state dict) — single-session only.
-Updated: 2026-04-01
+Updated: 2026-04-02
 """
 import logging
 
@@ -15,7 +15,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
 from app.graph import run_pipeline
-from app.tools.github_client import get_issue
+from app.tools.github_client import get_issue, get_historical_context
 
 logger = logging.getLogger("fixora.api")
 router = APIRouter()
@@ -30,6 +30,7 @@ class RunRequest(BaseModel):
     issue_number: int = 1
     issue_title: str = ""
     issue_body: str = ""
+    time_machine: bool = True   # If True, auto-resolve parent commit SHA via GitHub timeline
 
 
 # ── POST /api/index  (frontend calls this first) ──────────────────────────────
@@ -38,11 +39,15 @@ async def index_and_run(req: RunRequest):
     """
     Run the full Fixora pipeline (index → parse → locate → patch → evaluate).
     Blocks until all 5 agents complete, then caches the final state.
+
+    Time Machine mode (time_machine=True, default):
+      Resolves the parent SHA of the commit that closed the issue so the
+      indexer checks out the *broken* state of the codebase before embedding.
     """
     global _state
     _state = {}  # clear previous run
 
-    # Auto-fetch issue details from GitHub if not provided by the client
+    # ── Auto-fetch issue details from GitHub if not provided ─────────────────
     issue_title = req.issue_title.strip()
     issue_body  = req.issue_body.strip()
     if not issue_title:
@@ -54,6 +59,28 @@ async def index_and_run(req: RunRequest):
         except Exception as exc:
             logger.warning(f"[API] Could not fetch issue from GitHub: {exc}")
 
+    # ── Time Machine: resolve parent commit SHA ───────────────────────────────
+    target_commit_sha: str | None = None
+    if req.time_machine:
+        try:
+            target_commit_sha = get_historical_context(req.repo_url, req.issue_number)
+            if target_commit_sha:
+                logger.info(
+                    f"[API] Time Machine active — indexing at commit {target_commit_sha[:8]} "
+                    f"(pre-fix state for issue #{req.issue_number})"
+                )
+            else:
+                logger.info(
+                    f"[API] Time Machine: issue #{req.issue_number} is open or has no "
+                    "closing commit — indexing latest HEAD."
+                )
+        except Exception as exc:
+            # Non-fatal: log & continue without time travel
+            logger.warning(
+                f"[API] Time Machine resolution failed for issue #{req.issue_number}: {exc}. "
+                "Falling back to latest HEAD."
+            )
+
     initial_state = {
         "repo_url": req.repo_url,
         "issue_event": {},
@@ -62,6 +89,7 @@ async def index_and_run(req: RunRequest):
         "issue_body": issue_body,
         "current_phase": "start",
         "indexed": False,
+        "target_commit_sha": target_commit_sha,  # None → latest HEAD
     }
 
     logger.info(f"[API] Starting pipeline: {req.repo_url} | issue #{req.issue_number}")
@@ -73,7 +101,11 @@ async def index_and_run(req: RunRequest):
 
     _state = final
     logger.info(f"[API] Pipeline complete. Phase: {final.get('current_phase')}")
-    return {"status": "indexed", "collection_name": final.get("collection_name")}
+    return {
+        "status": "indexed",
+        "collection_name": final.get("collection_name"),
+        "time_machine_sha": target_commit_sha,
+    }
 
 
 # ── GET /api/issue ────────────────────────────────────────────────────────────

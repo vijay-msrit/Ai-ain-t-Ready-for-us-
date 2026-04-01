@@ -3,7 +3,7 @@ Shared LangGraph state schema for the Fixora pipeline.
 All agents read from and write to this TypedDict.
 Fields are grouped by pipeline phase (Input → Index → Parse → Locate → Patch → Evaluate).
 total=False means all fields are optional — agents only set what they produce.
-Updated: 2026-04-01
+Updated: 2026-04-02
 """
 from typing import TypedDict, Optional
 
@@ -17,6 +17,7 @@ class FixoraState(TypedDict, total=False):
     # ── Phase 1: Indexing ──────────────────────────────────────────────────────
     collection_name: str            # Chroma collection for this repo
     indexed: bool                   # True if Chroma index exists
+    target_commit_sha: Optional[str]  # "Time Machine" — parent commit of the closing commit
 
     # ── Phase 2: Issue Processing ──────────────────────────────────────────────
     classified_issue: dict          # {type, component, severity, summary, steps_to_reproduce}
