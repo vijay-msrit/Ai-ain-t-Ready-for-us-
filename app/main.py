@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
 from app.webhook import router as webhook_router
+from app.api import router as api_router
 
 logging.basicConfig(
     level=settings.log_level,
@@ -38,6 +39,7 @@ app.add_middleware(
 )
 
 app.include_router(webhook_router, prefix="/webhook", tags=["webhook"])
+app.include_router(api_router, prefix="/api", tags=["api"])
 
 
 @app.get("/", tags=["health"])

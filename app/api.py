@@ -54,7 +54,8 @@ async def index_and_run(req: RunRequest):
     logger.info(f"[API] Starting pipeline: {req.repo_url} | issue #{req.issue_number}")
     final = await run_pipeline(initial_state)
 
-    if final.get("error"):
+    # Only throw 500 if it didn't finish the pipeline (i.e. not "done")
+    if final.get("error") and final.get("current_phase") != "done":
         raise HTTPException(status_code=500, detail=final["error"])
 
     _state = final
