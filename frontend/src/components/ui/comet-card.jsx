@@ -30,9 +30,10 @@ export const CometCard = ({
       />
       <div
         className={clsx(
-          "relative flex h-full w-full flex-col rounded-2xl bg-[#141414] backdrop-blur-xl z-10",
+          "relative flex h-full w-full flex-col rounded-2xl backdrop-blur-xl z-10",
           className
         )}
+        style={{ background: "var(--bg-card)" }}
       >
         {children}
       </div>

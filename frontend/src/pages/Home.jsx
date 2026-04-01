@@ -106,8 +106,7 @@ export default function Home() {
           <div style={{ display: "inline-block", marginBottom: "24px" }}>
             <div style={{ 
               width: "80px", height: "80px", margin: "0 auto", borderRadius: "16px",
-              background: `linear-gradient(135deg, ${SHARED_ORANGE}, #D97706)`, 
-              boxShadow: `0 0 40px ${SHARED_ORANGE}60`, 
+              background: "var(--accent-blue)",
               display: "flex", alignItems: "center", justifyContent: "center" 
             }}>
               <IconLogo />
@@ -140,8 +139,8 @@ export default function Home() {
               padding: "16px 40px",
               fontSize: "16px",
               fontWeight: "700",
-              color: "var(--text-main)",
-              background: SHARED_BLUE, // Solid blue background matching "Next" button
+              color: "#fff",
+              background: SHARED_BLUE,
               border: "none",
               borderRadius: "50px",
               cursor: "pointer",
@@ -157,6 +156,70 @@ export default function Home() {
             <IconArrow />
           </motion.button>
         </motion.div>
+
+        {/* ── Tech Stack Marquee ── */}
+        <div style={{ width: "100vw", marginLeft: "calc(-50vw + 50%)", marginBottom: "60px", marginTop: "20px", overflow: "hidden" }}>
+          <p style={{ textAlign: "center", fontSize: "11px", fontWeight: "700", letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: "20px" }}>
+            Built with
+          </p>
+          {/* Fade masks */}
+          <div style={{ position: "relative" }}>
+            <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: "120px", background: "linear-gradient(to right, var(--bg-main), transparent)", zIndex: 2, pointerEvents: "none" }} />
+            <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: "120px", background: "linear-gradient(to left, var(--bg-main), transparent)", zIndex: 2, pointerEvents: "none" }} />
+            <div style={{ display: "flex", gap: "12px", animation: "marquee 28s linear infinite", width: "max-content" }}>
+              {[
+                { name: "Python", color: "#3B82F6" },
+                { name: "FastAPI", color: "#10B981" },
+                { name: "React", color: "#38BDF8" },
+                { name: "Vite", color: "#A78BFA" },
+                { name: "ChromaDB", color: "#F59E0B" },
+                { name: "OpenAI GPT-4", color: "#10B981" },
+                { name: "GitHub API", color: "#6B7280" },
+                { name: "GitPython", color: "#F97316" },
+                { name: "PyGithub", color: "#EC4899" },
+                { name: "Framer Motion", color: "#8B5CF6" },
+                { name: "AWS EC2", color: "#F59E0B" },
+                { name: "Docker", color: "#38BDF8" },
+                { name: "LangChain", color: "#22C55E" },
+                // Duplicate for seamless loop
+                { name: "Python", color: "#3B82F6" },
+                { name: "FastAPI", color: "#10B981" },
+                { name: "React", color: "#38BDF8" },
+                { name: "Vite", color: "#A78BFA" },
+                { name: "ChromaDB", color: "#F59E0B" },
+                { name: "OpenAI GPT-4", color: "#10B981" },
+                { name: "GitHub API", color: "#6B7280" },
+                { name: "GitPython", color: "#F97316" },
+                { name: "PyGithub", color: "#EC4899" },
+                { name: "Framer Motion", color: "#8B5CF6" },
+                { name: "AWS EC2", color: "#F59E0B" },
+                { name: "Docker", color: "#38BDF8" },
+                { name: "LangChain", color: "#22C55E" },
+              ].map((tech, i) => (
+                <span key={i} style={{
+                  display: "inline-flex", alignItems: "center", gap: "8px",
+                  padding: "8px 18px", borderRadius: "9999px",
+                  background: "var(--bg-card)",
+                  border: "1px solid var(--border)",
+                  fontSize: "13px", fontWeight: "600",
+                  color: "var(--text-main)",
+                  whiteSpace: "nowrap",
+                  boxShadow: "var(--shadow-idle)",
+                  flexShrink: 0,
+                }}>
+                  <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: tech.color, flexShrink: 0 }} />
+                  {tech.name}
+                </span>
+              ))}
+            </div>
+          </div>
+          <style>{`
+            @keyframes marquee {
+              0%   { transform: translateX(0); }
+              100% { transform: translateX(-50%); }
+            }
+          `}</style>
+        </div>
 
         {/* Agents Grid using CometCard */}
         <div style={{ width: "100%" }}>
@@ -190,9 +253,9 @@ export default function Home() {
                     <div style={{ 
                       width: "48px", height: "48px", 
                       borderRadius: "12px", 
-                      background: SHARED_BLUE, // Solid Indigo/Blue box matching Agent icon
+                      background: SHARED_BLUE,
                       display: "flex", alignItems: "center", justifyContent: "center",
-                      color: "var(--text-main)" // White logo inside
+                      color: "#fff"
                     }}>
                       {agent.icon}
                     </div>
