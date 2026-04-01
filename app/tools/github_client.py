@@ -1,4 +1,8 @@
-"""Tool: GitHub API client wrapper using PyGithub."""
+"""Tool: GitHub API client wrapper using PyGithub.
+Provides: create_pull_request(), add_issue_comment(), branch management.
+Requires GITHUB_TOKEN with repo write permissions.
+Updated: 2026-04-01
+"""
 import logging
 from github import Github, GithubException
 from app.config import settings

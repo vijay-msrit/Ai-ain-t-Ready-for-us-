@@ -1,4 +1,8 @@
-"""Tool: Apply unified diff patches and write test files to local repo."""
+"""Tool: Apply unified diff patches and write test files to local repo.
+Uses 'git apply' for cross-platform compatibility (works on Windows via Git for Windows).
+Also handles branch creation, commit, push, and test file writing.
+Updated: 2026-04-01
+"""
 import logging
 import os
 import subprocess

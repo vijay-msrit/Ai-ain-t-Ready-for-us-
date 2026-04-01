@@ -1,4 +1,6 @@
 """FastAPI entry point for Fixora."""
+# Main entry point: sets up FastAPI app, CORS, logging, and registers webhook/API routers.
+# Updated: 2026-04-01
 import logging
 from contextlib import asynccontextmanager
 from fastapi import FastAPI

@@ -1,4 +1,7 @@
 """Application settings loaded from environment variables."""
+# Manages all config via .env file using pydantic-settings.
+# Supports three LLM providers: openai, deepseek, groq.
+# Updated: 2026-04-01
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import Field
 

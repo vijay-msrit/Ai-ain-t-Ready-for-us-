@@ -3,6 +3,8 @@ Phase 3 — Context Retrieval & Bug Localization Agent.
 
 Uses RAG (LlamaIndex + Chroma) to find the code snippets most relevant
 to the reported issue, and ranks probable bug locations.
+Retrieves TOP_K=8 snippets, de-duplicates by file, then keeps RERANK_TOP=5.
+Updated: 2026-04-01
 """
 import logging
 

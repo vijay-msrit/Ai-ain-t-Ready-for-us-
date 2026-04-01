@@ -1,6 +1,9 @@
 """
 Shared LangGraph state schema for the Fixora pipeline.
 All agents read from and write to this TypedDict.
+Fields are grouped by pipeline phase (Input → Index → Parse → Locate → Patch → Evaluate).
+total=False means all fields are optional — agents only set what they produce.
+Updated: 2026-04-01
 """
 from typing import TypedDict, Optional
 

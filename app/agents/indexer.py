@@ -3,6 +3,8 @@ Phase 1 — Repository Indexer Agent.
 
 Clones the target repo, chunks the source code, generates vector embeddings,
 and stores them in ChromaDB via LlamaIndex.
+Steps: clone → chunk → build_index. Skips re-indexing if collection exists.
+Updated: 2026-04-01
 """
 import logging
 import os

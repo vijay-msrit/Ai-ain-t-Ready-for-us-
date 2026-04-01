@@ -3,6 +3,8 @@ Phase 4 — Patch & Test Generation Agent.
 
 Uses the LLM to generate a unified diff patch and a pytest test file,
 then applies the patch to the local repo clone.
+Steps: generate_patch → apply_patch → generate_tests → write_test_file.
+Updated: 2026-04-01
 """
 import ast
 import logging

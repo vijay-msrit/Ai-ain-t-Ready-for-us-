@@ -1,4 +1,8 @@
-"""Tool: Source code chunking using LlamaIndex."""
+"""Tool: Source code chunking using LlamaIndex.
+Splits source files into overlapping code chunks for vector indexing.
+Supports 11 languages. Settings: CHUNK_LINES=60, OVERLAP=15, MAX_CHARS=4000.
+Updated: 2026-04-01
+"""
 import logging
 from pathlib import Path
 

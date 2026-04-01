@@ -1,5 +1,8 @@
 """
 LangGraph StateGraph — wires all Fixora agents into a single pipeline.
+Pipeline flow: parse → locate → patch → evaluate
+Each step performs an error-check; aborts early if an error is set in state.
+Updated: 2026-04-01
 """
 import logging
 from langgraph.graph import StateGraph, END

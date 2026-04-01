@@ -1,4 +1,8 @@
-"""Tool: Repository cloning and file walking utilities."""
+"""Tool: Repository cloning and file walking utilities.
+Clones repos into system temp dir (fixora_repos/). Re-uses existing clones and pulls latest.
+Filters source files by SUPPORTED_EXTENSIONS and skips SKIP_DIRS noise folders.
+Updated: 2026-04-01
+"""
 import logging
 import os
 import shutil

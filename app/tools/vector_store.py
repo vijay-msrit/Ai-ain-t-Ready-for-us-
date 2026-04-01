@@ -1,4 +1,8 @@
-"""Tool: ChromaDB vector store integration via LlamaIndex."""
+"""Tool: ChromaDB vector store integration via LlamaIndex.
+build_index() inserts code chunks; query_index() retrieves top-k similar snippets.
+Embedding model defaults to text-embedding-3-small (OpenAI-compatible).
+Updated: 2026-04-01
+"""
 import logging
 
 import chromadb

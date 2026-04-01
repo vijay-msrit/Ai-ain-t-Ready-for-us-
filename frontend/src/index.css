@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { box-sizing: border-box; }
+
+  html, body {
+    background-color: #0D1117;
+    color: #e2e8f0;
+    font-family: "Inter", system-ui, sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: #0D1117; }
+  ::-webkit-scrollbar-thumb { background: #30363D; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #F5C842; }
+}
+
+@layer components {
+  .card-dark {
+    @apply bg-navy-card border border-navy-border rounded-3xl shadow-card;
+  }
+
+  .card-light {
+    @apply bg-cream border border-cream-dark rounded-3xl shadow-card-light;
+  }
+
+  .btn-yellow {
+    @apply inline-flex items-center justify-center gap-2
+           bg-yellow text-ink font-bold rounded-full px-7 py-3.5
+           shadow-yellow-sm hover:shadow-yellow hover:bg-yellow-dark
+           transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]
+           disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2
+           border-2 border-navy-border text-muted font-semibold rounded-full px-7 py-3.5
+           hover:border-yellow hover:text-yellow transition-all duration-200;
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full;
+  }
+
+  .code-dark {
+    @apply font-mono text-sm bg-navy border border-navy-border rounded-2xl p-4
+           overflow-x-auto leading-relaxed;
+  }
+
+  .eyebrow {
+    @apply text-yellow text-xs font-bold uppercase tracking-[0.2em] mb-3;
+  }
+}

@@ -1,4 +1,8 @@
-"""Tool: LLM client factory — supports OpenAI, DeepSeek, and Groq."""
+"""Tool: LLM client factory — supports OpenAI, DeepSeek, and Groq.
+get_llm_client() is @lru_cache'd — same instance reused across all agents.
+groq_chat() uses the native Groq SDK with reasoning_effort='medium'.
+Updated: 2026-04-01
+"""
 import logging
 from functools import lru_cache
 from typing import Union

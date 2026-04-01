@@ -3,6 +3,8 @@ Phase 2 — Issue Processing Agent.
 
 Parses and classifies a GitHub issue using an LLM.
 Outputs structured metadata: type, component, severity, summary.
+Also triggers the indexer (Phase 1) if the repo hasn't been indexed yet.
+Updated: 2026-04-01
 """
 import json
 import logging

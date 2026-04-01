@@ -3,6 +3,8 @@ GitHub Webhook receiver.
 
 Validates the HMAC-SHA256 signature from GitHub, extracts the issue event,
 and kicks off the Fixora LangGraph pipeline asynchronously.
+Supports: /webhook/github (live webhook) and /webhook/trigger (manual test endpoint).
+Updated: 2026-04-01
 """
 import hashlib
 import hmac

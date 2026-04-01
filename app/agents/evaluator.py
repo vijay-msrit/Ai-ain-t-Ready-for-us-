@@ -3,6 +3,8 @@ Phase 5 — Evaluation & PR Creation Agent.
 
 Assigns a confidence score to the patch, runs the generated tests,
 and creates a GitHub Pull Request draft.
+Scoring: +0.4 (addresses bug), +0.3 (minimal change), +0.2 (test quality), +0.1 (diff format).
+Updated: 2026-04-01
 """
 import logging
 import subprocess
