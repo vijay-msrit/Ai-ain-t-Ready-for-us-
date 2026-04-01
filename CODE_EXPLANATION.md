@@ -2,7 +2,7 @@
 
 ## 🧠 What Fixora Does (One Line)
 > Fixora watches GitHub issues, finds the bug in your code using AI, generates a fix, writes tests, and opens a Pull Request — automatically.
-
+#
 ---
 
 ## 🗺️ Project Structure (Mental Map)
