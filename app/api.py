@@ -15,6 +15,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
 from app.graph import run_pipeline
+from app.tools.github_client import get_issue
 
 logger = logging.getLogger("fixora.api")
 router = APIRouter()
@@ -41,12 +42,24 @@ async def index_and_run(req: RunRequest):
     global _state
     _state = {}  # clear previous run
 
+    # Auto-fetch issue details from GitHub if not provided by the client
+    issue_title = req.issue_title.strip()
+    issue_body  = req.issue_body.strip()
+    if not issue_title:
+        try:
+            gh_issue   = get_issue(req.repo_url, req.issue_number)
+            issue_title = gh_issue["title"]
+            issue_body  = issue_body or gh_issue["body"]
+            logger.info(f"[API] Auto-fetched issue #{req.issue_number}: {issue_title!r}")
+        except Exception as exc:
+            logger.warning(f"[API] Could not fetch issue from GitHub: {exc}")
+
     initial_state = {
         "repo_url": req.repo_url,
         "issue_event": {},
         "issue_number": req.issue_number,
-        "issue_title": req.issue_title,
-        "issue_body": req.issue_body,
+        "issue_title": issue_title,
+        "issue_body": issue_body,
         "current_phase": "start",
         "indexed": False,
     }

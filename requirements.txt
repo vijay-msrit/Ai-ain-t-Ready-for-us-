@@ -17,6 +17,7 @@ openai>=1.25.0
 llama-index-core>=0.10.0
 llama-index-vector-stores-chroma>=0.1.0
 llama-index-embeddings-openai>=0.1.0
+llama-index-embeddings-huggingface>=0.2.0
 chromadb>=0.5.0
 
 # ── GitHub Integration ─────────────────────────────────────────────────────────

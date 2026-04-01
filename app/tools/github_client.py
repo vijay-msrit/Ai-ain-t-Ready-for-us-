@@ -59,6 +59,14 @@ def create_pull_request(
     return pr.html_url, pr.number
 
 
+def get_issue(repo_url: str, issue_number: int) -> dict:
+    """Fetch issue title and body from GitHub. Returns {title, body}."""
+    repo = _get_github_repo(repo_url)
+    issue = repo.get_issue(issue_number)
+    logger.info(f"[github_client] Fetched issue #{issue_number}: {issue.title!r}")
+    return {"title": issue.title, "body": issue.body or ""}
+
+
 def add_issue_comment(repo_url: str, issue_number: int, comment: str) -> None:
     """Post a comment on a GitHub issue (e.g. to notify of processing start)."""
     repo = _get_github_repo(repo_url)

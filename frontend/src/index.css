@@ -3,57 +3,126 @@
 @tailwind utilities;
 
 @layer base {
-  * { box-sizing: border-box; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
   html, body {
-    background-color: #0D1117;
-    color: #e2e8f0;
+    background-color: #0A0A0A;
+    color: #FFFFFF;
     font-family: "Inter", system-ui, sans-serif;
-    margin: 0;
-    padding: 0;
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
   }
 
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track { background: #0D1117; }
-  ::-webkit-scrollbar-thumb { background: #30363D; border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: #F5C842; }
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: #0A0A0A; }
+  ::-webkit-scrollbar-thumb { background: #2A2A2A; border-radius: 2px; }
 }
 
-@layer components {
-  .card-dark {
-    @apply bg-navy-card border border-navy-border rounded-3xl shadow-card;
-  }
+/* ── Button hover / shadow effects ─────────────────────────────────────────── */
 
-  .card-light {
-    @apply bg-cream border border-cream-dark rounded-3xl shadow-card-light;
-  }
-
-  .btn-yellow {
-    @apply inline-flex items-center justify-center gap-2
-           bg-yellow text-ink font-bold rounded-full px-7 py-3.5
-           shadow-yellow-sm hover:shadow-yellow hover:bg-yellow-dark
-           transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]
-           disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100;
-  }
-
-  .btn-outline {
-    @apply inline-flex items-center justify-center gap-2
-           border-2 border-navy-border text-muted font-semibold rounded-full px-7 py-3.5
-           hover:border-yellow hover:text-yellow transition-all duration-200;
-  }
-
-  .badge {
-    @apply inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full;
-  }
-
-  .code-dark {
-    @apply font-mono text-sm bg-navy border border-navy-border rounded-2xl p-4
-           overflow-x-auto leading-relaxed;
-  }
-
-  .eyebrow {
-    @apply text-yellow text-xs font-bold uppercase tracking-[0.2em] mb-3;
-  }
+.btn-prev {
+  transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.12s ease;
 }
+.btn-prev:hover:not(:disabled) {
+  background: #252525 !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+  transform: translateY(-1px);
+}
+.btn-prev:active:not(:disabled) { transform: translateY(0); }
+
+.btn-next {
+  transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.12s ease;
+}
+.btn-next:hover:not(:disabled) {
+  background: #4F46E5 !important;
+  box-shadow: 0 4px 18px rgba(99, 102, 241, 0.45);
+  transform: translateY(-1px);
+}
+.btn-next:active:not(:disabled) { transform: translateY(0); }
+
+.btn-run {
+  transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.12s ease;
+}
+.btn-run:hover:not(:disabled) {
+  background: #9A7200 !important;
+  box-shadow: 0 6px 22px rgba(154, 114, 0, 0.45);
+  transform: translateY(-1px);
+}
+.btn-run:active:not(:disabled) { transform: translateY(0); box-shadow: none; }
+
+/* ── Global interactive element effects ─────────────────────────────────────── */
+
+/* Sidebar nav links */
+aside a {
+  transition: opacity 0.15s ease;
+}
+aside a > div {
+  transition: background 0.15s ease, transform 0.12s ease, box-shadow 0.15s ease;
+}
+aside a:hover > div {
+  background: #1E1E1E !important;
+  transform: translateX(3px);
+  box-shadow: 2px 0 12px rgba(0,0,0,0.3);
+}
+aside a:active > div { transform: translateX(1px); }
+
+/* Agent cards */
+div[style*="border-radius: 12px"] {
+  transition: box-shadow 0.2s ease, transform 0.15s ease;
+}
+div[style*="border-radius: 12px"]:hover {
+  box-shadow: 0 8px 28px rgba(0,0,0,0.45);
+}
+
+/* File/snippet rows with click */
+div[style*="cursor: pointer"] {
+  transition: background 0.15s ease !important;
+}
+div[style*="cursor: pointer"]:hover {
+  background: #222222 !important;
+}
+
+/* File list rows in Localizer */
+div[style*="border-radius: 8px"][style*="1px solid #252525"] {
+  transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+}
+div[style*="border-radius: 8px"][style*="1px solid #252525"]:hover {
+  background: #222222 !important;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+  transform: translateY(-1px);
+}
+
+/* Inputs — glow on focus */
+input, textarea {
+  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+input:focus, textarea:focus {
+  border-color: #6366F1 !important;
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.15) !important;
+  outline: none !important;
+}
+
+/* Stat/score cards */
+div[style*="text-align: center"][style*="border-radius: 10px"] {
+  transition: box-shadow 0.18s ease, transform 0.14s ease;
+}
+div[style*="text-align: center"][style*="border-radius: 10px"]:hover {
+  box-shadow: 0 6px 22px rgba(0,0,0,0.5);
+  transform: translateY(-2px);
+}
+
+/* PR / info rows */
+div[style*="border-bottom: 1px solid #252525"] {
+  transition: background 0.15s ease;
+}
+div[style*="border-bottom: 1px solid #252525"]:hover {
+  background: #1E1E1E !important;
+}
+
+/* Generic anchor tags */
+a[href] {
+  transition: opacity 0.15s ease;
+}
+a[href]:hover { opacity: 0.85; }
+
+

@@ -1,42 +1,40 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import Sidebar from "../components/Sidebar";
 import AgentCard from "../components/AgentCard";
 import { fetchPatch } from "../api/client";
 
+const WrenchIcon = () => (
+  <svg width="20" height="20" fill="none" stroke="white" strokeWidth="2.2"
+    strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+    <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" />
+  </svg>
+);
+
 function DiffLine({ line }) {
   if (line.startsWith("+") && !line.startsWith("+++"))
-    return (
-      <div className="flex gap-3 bg-success/10 px-3 py-0.5 rounded">
-        <span className="text-success font-bold w-4 shrink-0 select-none">+</span>
-        <span className="text-green-200">{line.slice(1)}</span>
-      </div>
-    );
+    return <div style={{ display: "flex", gap: "10px", background: "rgba(34,197,94,0.08)", padding: "1px 8px", borderRadius: "3px" }}>
+      <span style={{ color: "#22C55E", fontWeight: "700", userSelect: "none", width: "12px", flexShrink: 0 }}>+</span>
+      <span style={{ color: "#86EFAC" }}>{line.slice(1)}</span>
+    </div>;
   if (line.startsWith("-") && !line.startsWith("---"))
-    return (
-      <div className="flex gap-3 bg-danger/10 px-3 py-0.5 rounded">
-        <span className="text-danger font-bold w-4 shrink-0 select-none">-</span>
-        <span className="text-red-200">{line.slice(1)}</span>
-      </div>
-    );
+    return <div style={{ display: "flex", gap: "10px", background: "rgba(239,68,68,0.08)", padding: "1px 8px", borderRadius: "3px" }}>
+      <span style={{ color: "#EF4444", fontWeight: "700", userSelect: "none", width: "12px", flexShrink: 0 }}>-</span>
+      <span style={{ color: "#FCA5A5" }}>{line.slice(1)}</span>
+    </div>;
   if (line.startsWith("@@"))
-    return <div className="px-3 py-1 my-1"><span className="text-yellow text-xs font-mono">{line}</span></div>;
+    return <div style={{ padding: "2px 8px" }}><span style={{ color: "#FF8C00", fontSize: "11px", fontFamily: "monospace" }}>{line}</span></div>;
   if (line.startsWith("---") || line.startsWith("+++"))
-    return <div className="px-3 py-0.5"><span className="text-muted text-xs font-mono">{line}</span></div>;
-  return (
-    <div className="px-3 py-0.5">
-      <span className="text-muted/60 w-4 inline-block shrink-0 select-none"> </span>
-      <span className="text-slate-400">{line.slice(1) || line}</span>
-    </div>
-  );
+    return <div style={{ padding: "1px 8px" }}><span style={{ color: "#555", fontSize: "11px", fontFamily: "monospace" }}>{line}</span></div>;
+  return <div style={{ padding: "1px 8px" }}>
+    <span style={{ color: "#4A4A4A", userSelect: "none", width: "12px", display: "inline-block" }}> </span>
+    <span style={{ color: "#777" }}>{line.slice(1) || line}</span>
+  </div>;
 }
 
 export default function Patcher() {
   const [data, setData]     = useState(null);
   const [status, setStatus] = useState("idle");
   const [error, setError]   = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     (async () => {
@@ -47,91 +45,74 @@ export default function Patcher() {
   }, []);
 
   const lines        = data?.diff ? data.diff.split("\n") : [];
-  const addedCount   = lines.filter((l) => l.startsWith("+") && !l.startsWith("+++")).length;
-  const removedCount = lines.filter((l) => l.startsWith("-") && !l.startsWith("---")).length;
+  const addedCount   = lines.filter(l => l.startsWith("+") && !l.startsWith("+++")).length;
+  const removedCount = lines.filter(l => l.startsWith("-") && !l.startsWith("---")).length;
 
   return (
-    <div className="flex min-h-screen bg-navy">
-      <Sidebar />
-      <main className="flex-1 flex flex-col overflow-y-auto">
+    <div style={{ padding: "40px", maxWidth: "780px" }}>
+      <p style={{ fontSize: "11px", fontWeight: "700", color: "#FF8C00", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "12px" }}>
+        Step 4 of 5
+      </p>
+      <h1 style={{ fontSize: "54px", fontWeight: "900", lineHeight: 1.05, color: "#fff", marginBottom: "4px" }}>Generate</h1>
+      <h1 style={{ fontSize: "54px", fontWeight: "900", lineHeight: 1.05, color: "#FF8C00", marginBottom: "20px" }}>the Fix.</h1>
+      <p style={{ fontSize: "15px", color: "#777", lineHeight: 1.7, marginBottom: "32px" }}>
+        AI writes a precise patch diff to resolve the identified bug with minimal footprint.
+      </p>
 
-        {/* Hero */}
-        <section className="relative overflow-hidden bg-navy-light border-b border-navy-border px-10 py-14">
-          <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-yellow/8 blur-3xl pointer-events-none" />
-          <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} className="relative max-w-2xl">
-            <p className="eyebrow">Step 4 of 5</p>
-            <h1 className="text-5xl font-black text-white leading-[1.08] tracking-tight">
-              Generate<br />
-              <span className="text-yellow">the Fix.</span>
-            </h1>
-            <p className="text-muted text-base mt-4 leading-relaxed">
-              AI writes a precise patch diff to resolve the identified bug with minimal footprint.
-            </p>
-          </motion.div>
-        </section>
+      {data && (
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+          style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px", marginBottom: "16px" }}>
+          {[
+            { label: "Files Changed", val: data.files_changed ?? "—", color: "#fff" },
+            { label: "Lines Added",   val: `+${addedCount}`,           color: "#22C55E" },
+            { label: "Lines Removed", val: `-${removedCount}`,         color: "#EF4444" },
+          ].map(s => (
+            <div key={s.label} style={{ background: "#141414", border: "1px solid #252525", borderRadius: "10px", padding: "16px", textAlign: "center" }}>
+              <p style={{ fontSize: "36px", fontWeight: "900", fontFamily: "monospace", color: s.color, marginBottom: "6px" }}>{s.val}</p>
+              <p style={{ fontSize: "11px", color: "#555", fontWeight: "600" }}>{s.label}</p>
+            </div>
+          ))}
+        </motion.div>
+      )}
 
-        <div className="flex-1 p-10 space-y-6 max-w-4xl">
+      <AgentCard title="Patch Generator Agent" description="Unified diff output"
+        status={status} iconBg="#3B82F6" icon={<WrenchIcon />}>
 
-          {/* Stats */}
-          {data && (
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-3 gap-4">
-              {[
-                { label: "Files Changed", val: data.files_changed ?? "—", color: "text-white" },
-                { label: "Lines Added",   val: `+${addedCount}`,           color: "text-success" },
-                { label: "Lines Removed", val: `-${removedCount}`,         color: "text-danger" },
-              ].map((s) => (
-                <div key={s.label} className="card-dark p-5 text-center">
-                  <p className={`text-3xl font-black font-mono ${s.color}`}>{s.val}</p>
-                  <p className="text-muted text-xs mt-1.5 font-medium">{s.label}</p>
+        {status === "running" && (
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", color: "#777", padding: "16px 0" }}>
+            <svg style={{ animation: "spin 1s linear infinite" }} width="16" height="16" fill="none" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" stroke="#FF8C00" strokeWidth="4" opacity="0.25" />
+              <path fill="#FF8C00" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            </svg>
+            Generating patch with AI...
+          </div>
+        )}
+
+        {error && (
+          <div style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: "8px", padding: "12px", color: "#EF4444", fontSize: "13px" }}>
+            {error}
+          </div>
+        )}
+
+        {data?.diff && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <div style={{ background: "#0D0D0D", border: "1px solid #252525", borderRadius: "8px", overflow: "hidden" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: "#1A1A1A", padding: "8px 14px", borderBottom: "1px solid #252525" }}>
+                <div style={{ display: "flex", gap: "6px" }}>
+                  <div style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#EF4444" }} />
+                  <div style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#FF8C00" }} />
+                  <div style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#22C55E" }} />
                 </div>
-              ))}
-            </motion.div>
-          )}
-
-          <AgentCard title="Patch Generator Agent" description="Unified diff output" status={status} icon="🩹">
-            {status === "running" && (
-              <div className="flex items-center gap-3 text-muted py-6">
-                <svg className="w-5 h-5 animate-spin text-yellow" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                </svg>
-                Generating patch with AI...
+                <span style={{ fontSize: "11px", color: "#555", fontFamily: "monospace" }}>patch.diff</span>
               </div>
-            )}
-            {error && <div className="bg-danger/10 border border-danger/30 rounded-2xl p-4 text-danger text-sm">{error}</div>}
-
-            {data?.diff && (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                <div className="bg-navy border border-navy-border rounded-2xl overflow-hidden">
-                  {/* Window chrome */}
-                  <div className="flex items-center justify-between bg-navy-light px-4 py-2.5 border-b border-navy-border">
-                    <div className="flex gap-1.5">
-                      <div className="w-3 h-3 rounded-full bg-danger/60" />
-                      <div className="w-3 h-3 rounded-full bg-warning/60" />
-                      <div className="w-3 h-3 rounded-full bg-success/60" />
-                    </div>
-                    <span className="text-muted text-xs font-mono">patch.diff</span>
-                  </div>
-                  <div className="p-4 font-mono text-sm space-y-0.5 overflow-x-auto max-h-[520px] overflow-y-auto">
-                    {lines.map((line, i) => <DiffLine key={i} line={line} />)}
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </AgentCard>
-
-          {data && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
-              <button onClick={() => navigate("/evaluator")} className="btn-yellow">
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Apply & Evaluate
-              </button>
-            </motion.div>
-          )}
-        </div>
-      </main>
+              <div style={{ padding: "10px 0", fontFamily: "monospace", fontSize: "12px", maxHeight: "480px", overflowY: "auto", overflowX: "auto", lineHeight: 1.6 }}>
+                {lines.map((line, i) => <DiffLine key={i} line={line} />)}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AgentCard>
+      <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
     </div>
   );
 }

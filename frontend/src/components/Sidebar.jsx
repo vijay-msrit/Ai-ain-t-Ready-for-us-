@@ -1,91 +1,92 @@
 import { Link, useLocation } from "react-router-dom";
-import { motion } from "framer-motion";
 
 const STEPS = [
-  { label: "Indexer",        path: "/indexer",   num: 1 },
-  { label: "Issue Processor",path: "/issue",     num: 2 },
-  { label: "Localizer",      path: "/localizer", num: 3 },
-  { label: "Patch Generator",path: "/patcher",   num: 4 },
-  { label: "Evaluator",      path: "/evaluator", num: 5 },
+  { label: "Indexer",         path: "/indexer",   num: 1 },
+  { label: "Issue Processor", path: "/issue",     num: 2 },
+  { label: "Localizer",       path: "/localizer", num: 3 },
+  { label: "Patch Generator", path: "/patcher",   num: 4 },
+  { label: "Evaluator",       path: "/evaluator", num: 5 },
 ];
+
+const Check = () => (
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white"
+    strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="20 6 9 17 4 12" />
+  </svg>
+);
 
 export default function Sidebar() {
   const { pathname } = useLocation();
-  const activeIdx = STEPS.findIndex((s) => s.path === pathname);
+  const activeIdx = STEPS.findIndex(s => s.path === pathname);
 
   return (
-    <aside className="w-64 min-h-screen bg-navy-light border-r border-navy-border flex flex-col py-8 px-5 shrink-0">
+    <aside style={{
+      width: "330px", minHeight: "100vh", background: "#0A0A0A",
+      borderRight: "1px solid #1A1A1A", display: "flex", flexDirection: "column",
+      padding: "32px 20px", flexShrink: 0,
+    }}>
       {/* Logo */}
-      <div className="mb-10">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-2xl bg-yellow flex items-center justify-center shadow-yellow-sm">
-            <span className="text-ink font-black text-sm">FX</span>
-          </div>
-          <div>
-            <p className="text-white font-black text-lg leading-none tracking-tight">Fixora</p>
-            <p className="text-muted text-xs mt-0.5">AI Issue Resolver</p>
-          </div>
+      <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "28px" }}>
+        <div style={{
+        width: "42px", height: "42px", background: "#6366F1", borderRadius: "10px",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          fontSize: "15px", fontWeight: "900", color: "#fff", flexShrink: 0,
+        }}>FX</div>
+        <div>
+          <p style={{ fontSize: "17px", fontWeight: "800", color: "#fff", lineHeight: 1.1 }}>Fixora</p>
+          <p style={{ fontSize: "11px", color: "#555", marginTop: "3px" }}>AI Issue Resolver</p>
         </div>
       </div>
 
-      {/* Label */}
-      <div className="eyebrow px-1 mb-3">Pipeline</div>
+      <p style={{
+        fontSize: "11px", fontWeight: "700", color: "#FF8C00",
+        letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "14px",
+      }}>Pipeline</p>
 
-      {/* Steps */}
-      <nav className="flex flex-col gap-1 relative">
-        <div className="absolute left-[22px] top-5 bottom-5 w-px bg-navy-border" />
+      {/* Vertical connector */}
+      <nav style={{ position: "relative" }}>
+        <div style={{
+          position: "absolute", left: "15px", top: "28px", bottom: "28px",
+          width: "1px", background: "#1E1E1E",
+        }} />
 
         {STEPS.map((step, i) => {
           const isActive = pathname === step.path;
           const isDone   = i < activeIdx;
-
           return (
-            <Link key={step.path} to={step.path}>
-              <motion.div
-                whileHover={{ x: 3 }}
-                transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                className={`
-                  relative flex items-center gap-3 px-3 py-3 rounded-2xl transition-all duration-200 z-10
-                  ${isActive ? "bg-yellow/10 border border-yellow/30"
-                    : isDone  ? "hover:bg-white/5"
-                    : "hover:bg-white/5"}
-                `}
-              >
-                {/* Bubble */}
-                <div className={`
-                  w-8 h-8 rounded-full flex items-center justify-center text-xs font-black shrink-0
-                  border-2 transition-all duration-300
-                  ${isActive ? "bg-yellow border-yellow text-ink shadow-yellow-sm"
-                    : isDone  ? "bg-success/20 border-success text-success"
-                    : "bg-navy-card border-navy-border text-muted"}
-                `}>
-                  {isDone ? (
-                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                  ) : step.num}
+            <Link key={step.path} to={step.path} style={{ textDecoration: "none", display: "block" }}>
+              <div style={{
+                display: "flex", alignItems: "center", gap: "10px",
+                padding: "7px 8px", borderRadius: "8px", position: "relative", zIndex: 1,
+                background: isActive ? "#1A1A1A" : "transparent",
+                marginBottom: "2px",
+              }}>
+                <div style={{
+                  width: "36px", height: "36px", borderRadius: "50%", flexShrink: 0,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  fontSize: "13px", fontWeight: "800",
+                  background: isDone ? "#6366F1" : isActive ? "#FF8C00" : "transparent",
+                  border: isDone || isActive ? "none" : "1.5px solid #2A2A2A",
+                  color: isDone || isActive ? "#fff" : "#444",
+                }}>
+                  {isDone ? <Check /> : step.num}
                 </div>
-
                 <div>
-                  <p className={`text-sm font-semibold leading-none ${
-                    isActive ? "text-yellow" : isDone ? "text-white" : "text-muted"
-                  }`}>{step.label}</p>
-                  <p className={`text-xs mt-0.5 ${
-                    isActive ? "text-yellow/60" : isDone ? "text-success/70" : "text-navy-border"
-                  }`}>
-                    {isActive ? "Active" : isDone ? "Done" : `Step ${step.num}`}
-                  </p>
+                  <p style={{
+                    fontSize: "14px", fontWeight: isDone || isActive ? "600" : "400",
+                    color: isDone || isActive ? "#fff" : "#444", lineHeight: 1.2,
+                  }}>{step.label}</p>
+                  <p style={{
+                    fontSize: "11px", fontWeight: "600", marginTop: "2px",
+                    color: isDone ? "#6366F1" : isActive ? "#FF8C00" : "transparent",
+                  }}>{isDone ? "Done" : isActive ? "Active" : "·"}</p>
                 </div>
-              </motion.div>
+              </div>
             </Link>
           );
         })}
       </nav>
 
-      {/* Footer */}
-      <div className="mt-auto pt-8 border-t border-navy-border">
-        <p className="text-muted/50 text-xs text-center">Powered by Claude AI</p>
-      </div>
     </aside>
   );
 }

@@ -1,42 +1,32 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import Sidebar from "../components/Sidebar";
 import AgentCard from "../components/AgentCard";
 import { fetchEvaluate } from "../api/client";
 
-function ScoreRing({ label, value, color, delay = 0 }) {
-  const pct          = Math.round((value ?? 0) * 100);
-  const r            = 36;
-  const circumference = 2 * Math.PI * r;
-  const offset       = circumference - (pct / 100) * circumference;
+const ChartIcon = () => (
+  <svg width="20" height="20" fill="none" stroke="white" strokeWidth="2.2"
+    strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+    <line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" /><line x1="6" y1="20" x2="6" y2="14" />
+  </svg>
+);
 
+const LinkIcon = () => (
+  <svg width="14" height="14" fill="none" stroke="#FF8C00" strokeWidth="2"
+    strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+    <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" />
+    <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" />
+  </svg>
+);
+
+const ScoreCard = ({ label, value, color }) => {
+  const pct = Math.round((value ?? 0) * 100);
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ delay }}
-      className="card-dark p-7 flex flex-col items-center gap-4"
-    >
-      <div className="relative w-28 h-28">
-        <svg className="w-full h-full -rotate-90" viewBox="0 0 80 80">
-          <circle cx="40" cy="40" r={r} fill="none" stroke="#1C2333" strokeWidth="7" />
-          <motion.circle
-            cx="40" cy="40" r={r} fill="none"
-            stroke={color} strokeWidth="7" strokeLinecap="round"
-            strokeDasharray={circumference}
-            initial={{ strokeDashoffset: circumference }}
-            animate={{ strokeDashoffset: offset }}
-            transition={{ duration: 1.3, ease: "easeOut", delay: delay + 0.3 }}
-          />
-        </svg>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-white font-black text-2xl font-mono">{pct}%</span>
-        </div>
-      </div>
-      <p className="text-muted text-sm text-center font-medium">{label}</p>
-    </motion.div>
+    <div style={{ background: "#141414", border: "1px solid #252525", borderRadius: "10px", padding: "24px 16px", textAlign: "center" }}>
+      <p style={{ fontSize: "52px", fontWeight: "900", fontFamily: "monospace", color: "#fff", marginBottom: "8px" }}>{pct}%</p>
+      <p style={{ fontSize: "12px", color: "#555", fontWeight: "600" }}>{label}</p>
+    </div>
   );
-}
+};
 
 export default function Evaluator() {
   const [data, setData]     = useState(null);
@@ -52,119 +42,89 @@ export default function Evaluator() {
   }, []);
 
   return (
-    <div className="flex min-h-screen bg-navy">
-      <Sidebar />
-      <main className="flex-1 flex flex-col overflow-y-auto">
+    <div style={{ padding: "40px", maxWidth: "780px" }}>
+      <p style={{ fontSize: "11px", fontWeight: "700", color: "#FF8C00", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "12px" }}>
+        Step 5 of 5
+      </p>
+      <h1 style={{ fontSize: "54px", fontWeight: "900", lineHeight: 1.05, color: "#fff", marginBottom: "4px" }}>Evaluate</h1>
+      <h1 style={{ fontSize: "54px", fontWeight: "900", lineHeight: 1.05, color: "#FF8C00", marginBottom: "20px" }}>&amp; Ship.</h1>
+      <p style={{ fontSize: "15px", color: "#777", lineHeight: 1.7, marginBottom: "32px" }}>
+        Confidence scores, test results, and automatic PR creation — all in one place.
+      </p>
 
-        {/* Hero */}
-        <section className="relative overflow-hidden bg-navy-light border-b border-navy-border px-10 py-14">
-          <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-yellow/8 blur-3xl pointer-events-none" />
-          <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} className="relative max-w-2xl">
-            <p className="eyebrow">Step 5 of 5</p>
-            <h1 className="text-5xl font-black text-white leading-[1.08] tracking-tight">
-              Evaluate<br />
-              <span className="text-yellow">&amp; Ship.</span>
-            </h1>
-            <p className="text-muted text-base mt-4 leading-relaxed">
-              Confidence scores, test results, and automatic PR creation — all in one place.
-            </p>
-          </motion.div>
-        </section>
+      {/* Score cards */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px", marginBottom: "16px" }}>
+        <ScoreCard label="Fix Confidence"  value={data?.fix_confidence_score} />
+        <ScoreCard label="Test Pass Rate"  value={data?.test_pass_rate} />
+        <ScoreCard label="Code Quality"    value={data?.code_quality_score} />
+      </div>
 
-        <div className="flex-1 p-10 space-y-8 max-w-3xl">
+      <AgentCard title="Evaluator Agent" description="Pull request summary"
+        status={status} iconBg="#22C55E" icon={<ChartIcon />}>
 
-          {/* Score rings */}
-          <div className="grid grid-cols-3 gap-4">
-            <ScoreRing label="Fix Confidence"  value={data?.fix_confidence_score} color="#F5C842" delay={0} />
-            <ScoreRing label="Test Pass Rate"   value={data?.test_pass_rate}        color="#3FB950" delay={0.1} />
-            <ScoreRing label="Code Quality"     value={data?.code_quality_score}    color="#58A6FF" delay={0.2} />
+        {status === "running" && (
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", color: "#777", padding: "16px 0" }}>
+            <svg style={{ animation: "spin 1s linear infinite" }} width="16" height="16" fill="none" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" stroke="#FF8C00" strokeWidth="4" opacity="0.25" />
+              <path fill="#FF8C00" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            </svg>
+            Running evaluation suite...
           </div>
+        )}
 
-          <AgentCard title="Evaluator Agent" description="Pull request summary" status={status} icon="📊">
-            {status === "running" && (
-              <div className="flex items-center gap-3 text-muted py-6">
-                <svg className="w-5 h-5 animate-spin text-yellow" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                </svg>
-                Running evaluation suite...
-              </div>
-            )}
-            {error && <div className="bg-danger/10 border border-danger/30 rounded-2xl p-4 text-danger text-sm">{error}</div>}
+        {error && (
+          <div style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: "8px", padding: "12px", color: "#EF4444", fontSize: "13px" }}>
+            {error}
+          </div>
+        )}
 
-            {data && (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
-                <div className="bg-navy rounded-2xl border border-navy-border divide-y divide-navy-border">
-
-                  {data.pr_link && (
-                    <div className="flex items-center gap-3 px-5 py-4">
-                      <svg className="w-4 h-4 text-yellow shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                      </svg>
-                      <div>
-                        <p className="text-muted text-xs mb-0.5">PR Link</p>
-                        <a href={data.pr_link} target="_blank" rel="noreferrer"
-                          className="text-yellow text-sm hover:underline truncate block max-w-sm">
-                          {data.pr_link}
-                        </a>
-                      </div>
-                    </div>
-                  )}
-
-                  {data.branch_name && (
-                    <div className="flex items-center gap-3 px-5 py-4">
-                      <svg className="w-4 h-4 text-muted shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-                      </svg>
-                      <div>
-                        <p className="text-muted text-xs mb-0.5">Branch</p>
-                        <span className="text-white font-mono text-sm">{data.branch_name}</span>
-                      </div>
-                    </div>
-                  )}
-
-                  {data.commit_message && (
-                    <div className="flex items-start gap-3 px-5 py-4">
-                      <svg className="w-4 h-4 text-muted mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                      </svg>
-                      <div>
-                        <p className="text-muted text-xs mb-0.5">Commit Message</p>
-                        <span className="text-white font-mono text-sm leading-relaxed">{data.commit_message}</span>
-                      </div>
-                    </div>
-                  )}
+        {data && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <div style={{ background: "#1A1A1A", border: "1px solid #252525", borderRadius: "8px", overflow: "hidden" }}>
+              {data.pr_link && (
+                <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "12px 16px", borderBottom: "1px solid #252525" }}>
+                  <LinkIcon />
+                  <div style={{ minWidth: 0 }}>
+                    <p style={{ fontSize: "11px", color: "#555", marginBottom: "3px" }}>PR Link</p>
+                    <a href={data.pr_link} target="_blank" rel="noreferrer"
+                      style={{ fontSize: "13px", color: "#FF8C00", textDecoration: "none", display: "block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      {data.pr_link}
+                    </a>
+                  </div>
                 </div>
-              </motion.div>
-            )}
-          </AgentCard>
+              )}
+              {data.branch_name && (
+                <div style={{ padding: "12px 16px", borderBottom: "1px solid #252525" }}>
+                  <p style={{ fontSize: "11px", color: "#555", marginBottom: "3px" }}>Branch</p>
+                  <span style={{ fontFamily: "monospace", fontSize: "13px", color: "#ddd" }}>{data.branch_name}</span>
+                </div>
+              )}
+              {data.commit_message && (
+                <div style={{ padding: "12px 16px" }}>
+                  <p style={{ fontSize: "11px", color: "#555", marginBottom: "3px" }}>Commit Message</p>
+                  <span style={{ fontFamily: "monospace", fontSize: "13px", color: "#ddd", lineHeight: 1.5 }}>{data.commit_message}</span>
+                </div>
+              )}
+            </div>
 
-          {/* Success banner — Wildtype-inspired bold yellow statement block */}
-          {status === "success" && (
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="relative overflow-hidden rounded-4xl bg-yellow px-10 py-10"
-            >
-              <div className="absolute -bottom-8 -right-8 w-48 h-48 rounded-full bg-yellow-dark/40 pointer-events-none" />
-              <div className="relative flex items-start gap-5">
-                <div className="w-14 h-14 rounded-full bg-ink/15 flex items-center justify-center shrink-0">
-                  <svg className="w-7 h-7 text-ink" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            {status === "success" && (
+              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+                style={{ marginTop: "16px", background: "#0A2200", border: "1px solid rgba(34,197,94,0.3)", borderRadius: "10px", padding: "16px 20px", display: "flex", alignItems: "center", gap: "14px" }}>
+                <div style={{ width: "36px", height: "36px", borderRadius: "50%", background: "rgba(34,197,94,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <svg width="18" height="18" fill="none" stroke="#22C55E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                    <polyline points="20 6 9 17 4 12" />
                   </svg>
                 </div>
                 <div>
-                  <p className="text-ink font-black text-2xl leading-tight">Pull Request<br />Created Successfully.</p>
-                  <p className="text-ink/60 text-sm mt-2 font-medium">
-                    Fixora completed the full 5-agent pipeline and submitted your fix for review.
-                  </p>
+                  <p style={{ fontSize: "15px", fontWeight: "800", color: "#22C55E" }}>Pull Request Created Successfully.</p>
+                  <p style={{ fontSize: "12px", color: "#22C55E", opacity: 0.6, marginTop: "2px" }}>Fixora completed the full 5-agent pipeline and submitted your fix for review.</p>
                 </div>
-              </div>
-            </motion.div>
-          )}
-        </div>
-      </main>
+              </motion.div>
+            )}
+          </motion.div>
+        )}
+      </AgentCard>
+      <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
     </div>
   );
 }

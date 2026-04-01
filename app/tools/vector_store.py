@@ -1,7 +1,6 @@
 """Tool: ChromaDB vector store integration via LlamaIndex.
 build_index() inserts code chunks; query_index() retrieves top-k similar snippets.
 Embedding model: BAAI/bge-small-en-v1.5 (local HuggingFace, no API key needed).
-Updated: 2026-04-01
 """
 import logging
 

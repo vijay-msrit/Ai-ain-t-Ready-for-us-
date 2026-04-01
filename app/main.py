@@ -1,6 +1,20 @@
 """FastAPI entry point for Fixora."""
 # Main entry point: sets up FastAPI app, CORS, logging, and registers webhook/API routers.
 # Updated: 2026-04-01
+import os
+import shutil
+
+# ── Windows: ensure GitPython can find git.exe even if not in PATH ────────────
+if not shutil.which("git"):
+    _GIT_CANDIDATES = [
+        r"C:\Program Files\Git\bin\git.exe",
+        r"C:\Program Files (x86)\Git\bin\git.exe",
+    ]
+    for _p in _GIT_CANDIDATES:
+        if os.path.exists(_p):
+            os.environ["GIT_PYTHON_GIT_EXECUTABLE"] = _p
+            break
+
 import logging
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
