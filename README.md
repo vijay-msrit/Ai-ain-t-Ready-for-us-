@@ -153,16 +153,6 @@ fixora/
 
 ---
 
-## 👥 Team
-
-| Member | Phase Ownership |
-|---|---|
-| Anubhav Tiwari | Phase 1 — Indexer, Docker/Infra |
-| Anumalasetti Vijay | Phase 2 — Webhook + Issue Processor |
-| Aryan Sikhwal | Phase 3 & 4 — Localizer + Patcher |
-| Sarthak Mishra | Phase 5 — Evaluator + PR Creator, LangGraph wiring |
-
-**Guide:** Dr. Manasa SM, Associate Professor, AIML
 
 ---
 
