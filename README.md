@@ -12,7 +12,8 @@ Provide a GitHub issue. Fixora will index the code, locate the bug, generate a p
 
 Fixora operates on a 5-step pipeline, orchestrating specialized AI agents to resolve issues seamlessly from end to end:
 
-![Fixora Architecture](assets/landing.png)
+![Fixora Architecture (Light Theme)](assets/landing.png)
+![Fixora Architecture (Dark Theme)](assets/landing_dark.png)
 
 ### 1. Indexer Agent
 
@@ -29,12 +30,18 @@ Extracts context from the GitHub issue, categorizes the bug based on type, compo
 Performs semantic search across the vector space to pinpoint the exact broken files and relevant code snippets causing the issue.
 
 ### 4. Patcher Agent
+![Patcher Agent Workflow](assets/patcher.png)
 
 Feeds the localized context to the LLM to generate a minimal, safe, and syntactically valid patch diff.
 
 ### 5. Evaluator Agent
+![Evaluator Agent Workflow](assets/evaluator.jpg)
 
 Grades the generated patch against strict rubrics, creates tests to verify the fix, and ships the Pull Request directly to GitHub.
+
+![GitHub Pull Request](assets/github_pr.jpg)
+
+Fixora automatically generates a fully formatted GitHub Pull Request containing a detailed summary of the issue, files analyzed, and the AI's confidence score before merging.
 
 ---
 
