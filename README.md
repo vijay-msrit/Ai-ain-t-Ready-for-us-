@@ -15,7 +15,6 @@ Fixora operates on a 5-step pipeline, orchestrating specialized AI agents to res
 ![Fixora Architecture](assets/landing.png)
 
 ### 1. Indexer Agent
-![Indexer Agent Workflow](assets/indexer.png)
 
 Clones the repository and chunks the codebase into a dense ChromaDB vector graph. 
 
@@ -30,12 +29,10 @@ Extracts context from the GitHub issue, categorizes the bug based on type, compo
 Performs semantic search across the vector space to pinpoint the exact broken files and relevant code snippets causing the issue.
 
 ### 4. Patcher Agent
-![Patcher Agent Workflow](assets/patcher.png)
 
 Feeds the localized context to the LLM to generate a minimal, safe, and syntactically valid patch diff.
 
 ### 5. Evaluator Agent
-![Evaluator Agent Workflow](assets/evaluator.png)
 
 Grades the generated patch against strict rubrics, creates tests to verify the fix, and ships the Pull Request directly to GitHub.
 
