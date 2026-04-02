@@ -1,8 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Teko:wght@400;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Teko:wght@400;600;700&display=swap');
 
 :root {
   --bg-main: #0A0A0A;
@@ -62,29 +62,19 @@
   html, body {
     background-color: var(--bg-main);
     color: var(--text-main);
-    font-family: 'Teko', 'Bebas Neue', Impact, sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    font-family: 'Space Grotesk', sans-serif;
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
   }
 
-  /* ── Fix text clarity for condensed display fonts ── */
-  /* Target elements that were dynamically styled too thick and space them out */
-  * {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Teko', 'Bebas Neue', Impact, sans-serif;
+    text-transform: uppercase;
     letter-spacing: 0.05em;
-  }
-  
-  h1, h2, h3, h4, h5, h6, strong, b, 
-  [style*="font-weight: 700"], 
-  [style*="font-weight: 800"], 
-  [style*="font-weight: 900"] {
-    font-weight: 500 !important; /* Cap weight to stop browser 'faux-bold' smudging */
-    letter-spacing: 0.1em !important; /* Let the condensed characters breathe */
   }
 
   code, pre {
-    text-transform: none; /* Keep code diffs readable! */
+    font-family: 'JetBrains Mono', monospace;
   }
 
   ::-webkit-scrollbar { width: 4px; height: 4px; }
@@ -141,26 +131,26 @@ aside a:hover > div {
 aside a:active > div { transform: translateX(1px); }
 
 /* Agent cards */
-div[style*="border-radius: 12px"] {
+div[style*="border-radius: 12px"], div[style*="border-radius:12px"] {
   transition: box-shadow 0.2s ease, transform 0.15s ease;
 }
-div[style*="border-radius: 12px"]:hover {
+div[style*="border-radius: 12px"]:hover, div[style*="border-radius:12px"]:hover {
   box-shadow: 0 8px 28px rgba(0,0,0,0.45);
 }
 
 /* File/snippet rows with click */
-div[style*="cursor: pointer"] {
+div[style*="cursor: pointer"], div[style*="cursor:pointer"] {
   transition: background 0.15s ease !important;
 }
-div[style*="cursor: pointer"]:hover {
+div[style*="cursor: pointer"]:hover, div[style*="cursor:pointer"]:hover {
   background: #222222 !important;
 }
 
 /* File list rows in Localizer */
-div[style*="border-radius: 8px"][style*="1px solid var(--border)"] {
+div[style*="border-radius: 8px"][style*="1px solid var(--border)"], div[style*="border-radius:8px"][style*="1px solid var(--border)"] {
   transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
 }
-div[style*="border-radius: 8px"][style*="1px solid var(--border)"]:hover {
+div[style*="border-radius: 8px"][style*="1px solid var(--border)"]:hover, div[style*="border-radius:8px"][style*="1px solid var(--border)"]:hover {
   background: var(--border-dark) !important;
   box-shadow: 0 4px 14px rgba(0,0,0,0.25);
   transform: translateY(-1px);
@@ -177,10 +167,10 @@ input:focus, textarea:focus {
 }
 
 /* Stat/score cards */
-div[style*="text-align: center"][style*="border-radius: 10px"] {
+div[style*="text-align: center"][style*="border-radius: 10px"], div[style*="text-align:center"][style*="border-radius:10px"] {
   transition: box-shadow 0.18s ease, transform 0.14s ease;
 }
-div[style*="text-align: center"][style*="border-radius: 10px"]:hover {
+div[style*="text-align: center"][style*="border-radius: 10px"]:hover, div[style*="text-align:center"][style*="border-radius:10px"]:hover {
   box-shadow: 0 6px 22px rgba(0,0,0,0.5);
   transform: translateY(-2px);
 }

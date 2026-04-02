@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     groq_api_key: str = Field("", alias="GROQ_API_KEY")
     llm_provider: str = Field("groq", alias="LLM_PROVIDER")     # "openai" | "deepseek" | "groq"
     llm_model: str = Field("openai/gpt-oss-120b", alias="LLM_MODEL")
-    embedding_model: str = Field("text-embedding-3-small", alias="EMBEDDING_MODEL")
+    embedding_model: str = Field("BAAI/bge-small-en-v1.5", alias="EMBEDDING_MODEL")
 
     # GitHub
     github_token: str = Field("", alias="GITHUB_TOKEN")

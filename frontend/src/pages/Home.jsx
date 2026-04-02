@@ -158,7 +158,7 @@ export default function Home() {
         </motion.div>
 
         {/* ── Tech Stack Marquee ── */}
-        <div style={{ width: "100vw", marginLeft: "calc(-50vw + 50%)", marginBottom: "60px", marginTop: "20px", overflow: "hidden" }}>
+        <div style={{ width: "100%", marginBottom: "60px", marginTop: "20px", overflow: "hidden" }}>
           <p style={{ textAlign: "center", fontSize: "11px", fontWeight: "700", letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: "20px" }}>
             Built with
           </p>
@@ -201,7 +201,7 @@ export default function Home() {
                   padding: "8px 18px", borderRadius: "9999px",
                   background: "var(--bg-card)",
                   border: "1px solid var(--border)",
-                  fontSize: "13px", fontWeight: "600",
+                  fontSize: "13px", fontWeight: "400",
                   color: "var(--text-main)",
                   whiteSpace: "nowrap",
                   boxShadow: "var(--shadow-idle)",
