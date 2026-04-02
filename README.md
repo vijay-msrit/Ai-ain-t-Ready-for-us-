@@ -35,6 +35,7 @@ Performs semantic search across the vector space to pinpoint the exact broken fi
 Feeds the localized context to the LLM to generate a minimal, safe, and syntactically valid patch diff.
 
 ### 5. Evaluator Agent
+![Evaluator Agent Overview](assets/evaluator_main.png)
 ![Evaluator Agent Workflow](assets/evaluator.jpg)
 
 Grades the generated patch against strict rubrics, creates tests to verify the fix, and ships the Pull Request directly to GitHub.
